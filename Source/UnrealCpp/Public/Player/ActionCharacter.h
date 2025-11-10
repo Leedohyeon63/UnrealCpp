@@ -41,4 +41,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Player|Camera")
 	TObjectPtr<UCameraComponent> PlayerCamera = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "input")
+	TObjectPtr<UInputAction> IA_Look;
+
+
 };
