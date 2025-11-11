@@ -31,19 +31,59 @@ public:
 
 protected:
 	void OnMoveInput(const FInputActionValue& Invalue);
-
+	void OnRollInput(const FInputActionValue& Invalue);
+	//void OnSprintInput(const FInputActionValue& Invalue);
+	void SetSprintMode();
+	void SetWalkMode();
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "input")
+	TObjectPtr<UInputAction> IA_Move = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "input")
-	TObjectPtr<UInputAction> IA_Move;
+	TObjectPtr<UInputAction> IA_Sprint = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "input")
+	TObjectPtr<UInputAction> IA_Roll = nullptr;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Player|Camera")
 	TObjectPtr<USpringArmComponent> Springarm = nullptr;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Player|Camera")
-	TObjectPtr<UCameraComponent> PlayerCamera = nullptr;
+	TObjectPtr<UCameraComponent> PlayerCamera = nullptr; 
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "input")
-	TObjectPtr<UInputAction> IA_Look;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
+	float SprintSpeed = 1200.0f;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
+	float WalkSpeed = 600.0f;
 
+	//스테미나 관련
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
+	float MaxStamina = 50.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
+	float Stamina = 50.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
+	float StaminaCoolDown = 3.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
+	float StaminaTime = 0.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
+	float StaminaInProve = 7.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
+	float RollCost = 10.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
+	bool IsSprint = false;
+	//끝
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation|Montage")
+	TObjectPtr<UAnimMontage> RollMontage = nullptr;
+
+private:
+	UPROPERTY()
+	TWeakObjectPtr<UAnimInstance> AnimInstance = nullptr;
 };
