@@ -1,3 +1,5 @@
+
+
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
@@ -6,6 +8,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Player/ResourceComponent.h"
 // Sets default values
 AActionCharacter::AActionCharacter()
 {
@@ -32,42 +35,24 @@ AActionCharacter::AActionCharacter()
 void AActionCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	AnimInstance = GetMesh()->GetAnimInstance();
+	if (GetMesh())
+	{
+		AnimInstance = GetMesh()->GetAnimInstance();	// ABP 객체 가져오기
+	}
+	if (Resource)
+	{
+		Resource->OnStaminaEmpty.AddDynamic(this, &AActionCharacter::SetWalkMode);
+	}
+
+	IsSprint = false;
 }
 
 // Called every frame
 void AActionCharacter::Tick(float DeltaTime)
 {
-	UE_LOG(LogTemp, Log, TEXT("%f"), Stamina)
-
-	Super::Tick(DeltaTime);
-	if (IsSprint && Stamina > 0)
+	if (IsSprint && !GetVelocity().IsNearlyZero())	// 달리기 모드인 상태에서 움직이면 스태미너를 소비한다.
 	{
-		Stamina -= DeltaTime * 3.0f;
-		//UE_LOG(LogTemp, Log, TEXT("%f"), Stamina)
-	}
-	else
-	{
-		SetWalkMode();
-	}
-
-	if (!IsSprint && !AnimInstance->Montage_IsPlaying(RollMontage))
-	{
-		StaminaTime +=DeltaTime;
-		if (StaminaTime > StaminaCoolDown)
-		{
-			Stamina += DeltaTime * StaminaInProve;
-			if (Stamina >= 50.0f)
-			{
-				Stamina = MaxStamina;
-			}
-		}
-		//UE_LOG(LogTemp, Log, TEXT("%f"), StaminaTime)
-		//UE_LOG(LogTemp, Log, TEXT("%f"), Stamina)
-	}
-	else
-	{
-		StaminaTime = 0.0f;
+		Resource->AddStamina(-0.3f * DeltaTime);	// 스태미너 감소
 	}
 }
 
@@ -110,19 +95,14 @@ void AActionCharacter::OnRollInput(const FInputActionValue& Invalue)
 {
 	if (AnimInstance.IsValid())
 	{
-		if (!AnimInstance->IsAnyMontagePlaying())
+		if (!AnimInstance->IsAnyMontagePlaying() && Resource->HasEnoughStamina(RollCost))
 		{
 			//if (!GetLastMovementInputVector().IsNearlyZero())
 			//{
 			//	SetActorRotation(GetLastMovementInputVector().Rotation());
 			//}
-			if (Stamina >= RollCost)
-			{
-				PlayAnimMontage(RollMontage);
-				Stamina -= RollCost;
-				//UE_LOG(LogTemp, Log, TEXT("%f"), Stamina)
-			}
-
+			Resource->AddStamina(-RollCost);	// 스태미너 감소
+			PlayAnimMontage(RollMontage);
 		}
 	}
 }

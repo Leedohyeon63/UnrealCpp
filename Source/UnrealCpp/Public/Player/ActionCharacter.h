@@ -9,6 +9,7 @@
 class UInputAction;
 class USpringArmComponent;
 class UCameraComponent;
+class UResourceComponent;
 UCLASS()
 class UNREALCPP_API AActionCharacter : public ACharacter
 {
@@ -34,8 +35,21 @@ protected:
 	void OnRollInput(const FInputActionValue& Invalue);
 	//void OnSprintInput(const FInputActionValue& Invalue);
 	void SetSprintMode();
+
+	UFUNCTION()
 	void SetWalkMode();
 protected:
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Player|Camera")
+	TObjectPtr<USpringArmComponent> Springarm = nullptr;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Player|Camera")
+	TObjectPtr<UCameraComponent> PlayerCamera = nullptr;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Player|Resource")
+	TObjectPtr<UResourceComponent> Resource = nullptr;
+
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "input")
 	TObjectPtr<UInputAction> IA_Move = nullptr;
 
@@ -45,11 +59,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "input")
 	TObjectPtr<UInputAction> IA_Roll = nullptr;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Player|Camera")
-	TObjectPtr<USpringArmComponent> Springarm = nullptr;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Player|Camera")
-	TObjectPtr<UCameraComponent> PlayerCamera = nullptr; 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
 	float SprintSpeed = 1200.0f;
@@ -58,21 +68,6 @@ protected:
 	float WalkSpeed = 600.0f;
 
 	//스테미나 관련
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
-	float MaxStamina = 50.0f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
-	float Stamina = 50.0f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
-	float StaminaCoolDown = 3.0f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
-	float StaminaTime = 0.0f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
-	float StaminaInProve = 7.0f;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
 	float RollCost = 10.0f;
 
