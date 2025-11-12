@@ -2,6 +2,7 @@
 
 
 #include "Player/MainHUD.h"
+#include "Blueprint/UserWidget.h"
 
 
 void AMainHUD::BeginPlay()
@@ -9,7 +10,11 @@ void AMainHUD::BeginPlay()
 	Super::BeginPlay();
 	if (MainWidgetClass)
 	{
-		//UUserWidget* Widget = 
+		UUserWidget* Widget = CreateWidget<UUserWidget>(GetWorld(), MainWidgetClass);
+		if (Widget)
+		{
+			Widget->AddToViewport();
+		}
 	}
 
 }
