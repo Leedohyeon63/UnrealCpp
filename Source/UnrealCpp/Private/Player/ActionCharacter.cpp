@@ -28,7 +28,7 @@ AActionCharacter::AActionCharacter()
 	GetCharacterMovement()->bOrientRotationToMovement = true; //이동 방향을 바라보게 회전
 	GetCharacterMovement()->RotationRate = FRotator(0, 360, 0);
 
-
+	Resource = CreateDefaultSubobject<UResourceComponent>(TEXT("Resource"));
 }
 
 // Called when the game starts or when spawned

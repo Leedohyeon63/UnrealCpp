@@ -27,6 +27,9 @@
 //DECLARE_DELEGATE_RetVal
 //DECLARE_DELEGATE_EightParams
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnStaminaEmpty);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnStaminaChange, float, Current, float, Max);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDie);
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnHPChange, float, float);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class UNREALCPP_API UResourceComponent : public UActorComponent
@@ -50,14 +53,35 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void AddStamina(float InValue);
 
+	UFUNCTION(BlueprintCallable)
+	void AddHP(float InValue);
+
 	// 스태미너가 충분한지 확인하는 함수
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	inline bool HasEnoughStamina(float InValue) { return Stamina >= InValue; }
 
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	inline bool IsAlive() { return CurrentHP > 0; }
+
 	UPROPERTY(BlueprintAssignable, Category = "Event")
 	FOnStaminaEmpty OnStaminaEmpty;
 
+	UPROPERTY(BlueprintAssignable, Category = "Event")
+	FOnDie OnDie;
+
+	UPROPERTY(BlueprintAssignable, Category = "Event")
+	FOnStaminaChange OnStaminaChange;
+
+	//일반 델리게이트는 일반 블루프린트에서 사용 불가
+	FOnHPChange OnHPChange;
+
 protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+	float MaxHP = 100.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+	float CurrentHP = 0.0f;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 	float MaxStamina = 50.0f;
 
@@ -65,7 +89,7 @@ protected:
 	float Stamina = 50.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-	float StaminaInProve = 7.0f;
+	float StaminaInProve = 0.7f;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 	float StaminaCoolDown = 3.0f;

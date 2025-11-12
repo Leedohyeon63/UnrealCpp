@@ -19,6 +19,7 @@ void UResourceComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	Stamina = MaxStamina;
+	CurrentHP = MaxHP;
 	// ...
 	
 }
@@ -81,14 +82,26 @@ void UResourceComponent::AddStamina(float InValue)
 
 	// 스태미너를 소비하고 일정 시간 뒤에 자동재생되게 타이머 세팅
 	StaminaAutoRegenCoolTimerSet();
-
+	Stamina = FMath::Clamp(Stamina, 0, MaxStamina);
+	OnStaminaChange.Broadcast(Stamina, MaxStamina);
 	if (Stamina <= 0)
 	{
 		Stamina = 0.0f;
 		// 델리게이트로 스태미너가 떨어졌음을 알림
 		OnStaminaEmpty.Broadcast();
 	}
-
 	UE_LOG(LogTemp, Warning, TEXT("Stamina : %.1f"), Stamina);
+}
+
+void UResourceComponent::AddHP(float InValue)
+{
+	float HP = CurrentHP + InValue;
+	CurrentHP = FMath::Clamp(HP, 0, MaxHP);
+	OnHPChange.Broadcast(CurrentHP, MaxHP);
+
+	if (!IsAlive())
+	{
+		OnDie.Broadcast();
+	}
 }
 
