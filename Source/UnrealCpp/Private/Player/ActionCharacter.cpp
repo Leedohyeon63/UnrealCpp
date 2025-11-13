@@ -67,6 +67,9 @@ void AActionCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	{
 		enhanced->BindAction(IA_Move, ETriggerEvent::Triggered, this, &AActionCharacter::OnMoveInput);
 		enhanced->BindAction(IA_Roll, ETriggerEvent::Triggered, this, &AActionCharacter::OnRollInput);
+		enhanced->BindAction(IA_Jump, ETriggerEvent::Triggered, this, &AActionCharacter::OnJumpInput
+		
+		);
 		enhanced->BindAction(IA_Attack, ETriggerEvent::Triggered, this, &AActionCharacter::OnAttackInput);
 		enhanced->BindActionValueLambda(IA_Sprint, ETriggerEvent::Started, 
 			[this](const FInputActionValue& _) {
@@ -89,8 +92,6 @@ void AActionCharacter::OnMoveInput(const FInputActionValue& Invalue)
 	MoveDir = ContorolYawRotation.RotateVector(MoveDir);
 
 	AddMovementInput(MoveDir);
-
-
 }
 
 void AActionCharacter::OnRollInput(const FInputActionValue& Invalue)
@@ -123,6 +124,11 @@ void AActionCharacter::OnAttackInput(const FInputActionValue& Invalue)
 			SectionJumpForCombo();
 		}
 	}
+}
+
+void AActionCharacter::OnJumpInput(const FInputActionValue& Invalue)
+{
+	Jump();
 }
 
 void AActionCharacter::SectionJumpForCombo()

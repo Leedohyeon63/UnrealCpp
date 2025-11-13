@@ -44,6 +44,7 @@ protected:
 	void OnMoveInput(const FInputActionValue& Invalue);
 	void OnRollInput(const FInputActionValue& Invalue);
 	void OnAttackInput(const FInputActionValue& Invalue);
+	void OnJumpInput(const FInputActionValue& Invalue);
 
 	//void OnSprintInput(const FInputActionValue& Invalue);
 	void SetSprintMode();
@@ -73,6 +74,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "input")
 	TObjectPtr<UInputAction> IA_Attack = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "input")
+	TObjectPtr<UInputAction> IA_Jump = nullptr;
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
@@ -109,5 +113,7 @@ private:
 
 private:
 	void SectionJumpForCombo();
-	void SpendRunstamina(float DeltaTime);
+	void SpendRunstamina(float DeltaTime
+	
+	);
 };
