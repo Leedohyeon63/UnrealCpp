@@ -17,7 +17,12 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void RefreshWidget(float InCurrent, float InMax);
 protected:
+	virtual void NativePreConstruct() override;
+protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Resource", meta = (BindWidget))
 	TWeakObjectPtr<class UProgressBar> Bar;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Color")
+	FLinearColor FillColor = FLinearColor::Red;
 
 };

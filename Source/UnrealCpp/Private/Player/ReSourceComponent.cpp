@@ -55,7 +55,7 @@ void UResourceComponent::StaminaAutoRegenCoolTimerSet()
 void UResourceComponent::StaminaRegenPerTick()
 {
 	Stamina += StaminaInProve;
-
+	
 	if (Stamina > MaxStamina)
 	{
 		Stamina = MaxStamina;

@@ -9,3 +9,9 @@ void UResourcebarWidget::RefreshWidget(float InCurrent, float InMax)
 	Bar->SetPercent(InCurrent / InMax);
 
 }
+
+void UResourcebarWidget::NativePreConstruct()
+{
+	Super::NativePreConstruct();
+	Bar->SetFillColorAndOpacity(FillColor);
+}
