@@ -46,6 +46,15 @@ protected:
 private:
 	void StaminaAutoRegenCoolTimerSet();
 	void StaminaRegenPerTick();
+
+	inline void SetCurrentHealth(float InValue) {
+		CurrentHP = InValue;
+		OnHPChange.Broadcast(CurrentHP, MaxHP);
+	};
+	inline void SetCurrentStamina(float InValue) {
+		Stamina = InValue;
+		OnHPChange.Broadcast(Stamina, MaxStamina);
+	};
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
@@ -63,6 +72,12 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	inline bool IsAlive() { return CurrentHP > 0; }
 
+	inline float GetCurrentHealth() const { return CurrentHP; }
+	inline float GetMaxHealth() const { return MaxHP; }
+	inline float GetCurrentStamina() const { return Stamina; }
+	inline float GetMaxStamina() const { return MaxStamina; }
+
+	//델리게이트
 	UPROPERTY(BlueprintAssignable, Category = "Event")
 	FOnStaminaEmpty OnStaminaEmpty;
 

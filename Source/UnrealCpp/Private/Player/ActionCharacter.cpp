@@ -50,10 +50,11 @@ void AActionCharacter::BeginPlay()
 // Called every frame
 void AActionCharacter::Tick(float DeltaTime)
 {
-	if (IsSprint && !GetVelocity().IsNearlyZero())	// 달리기 모드인 상태에서 움직이면 스태미너를 소비한다.
-	{
-		Resource->AddStamina(-0.3f * DeltaTime);	// 스태미너 감소
-	}
+	SpendRunstamina(DeltaTime);
+	//if (IsSprint && !GetVelocity().IsNearlyZero() && !AnimInstance->IsAnyMontagePlaying())	// 달리기 모드인 상태에서 움직이면 스태미너를 소비한다.
+	//{
+	//	Resource->AddStamina(-3.0f * DeltaTime);	// 스태미너 감소
+	//}
 }
 
 // Called to bind functionality to input
@@ -66,6 +67,7 @@ void AActionCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	{
 		enhanced->BindAction(IA_Move, ETriggerEvent::Triggered, this, &AActionCharacter::OnMoveInput);
 		enhanced->BindAction(IA_Roll, ETriggerEvent::Triggered, this, &AActionCharacter::OnRollInput);
+		enhanced->BindAction(IA_Attack, ETriggerEvent::Triggered, this, &AActionCharacter::OnAttackInput);
 		enhanced->BindActionValueLambda(IA_Sprint, ETriggerEvent::Started, 
 			[this](const FInputActionValue& _) {
 				SetSprintMode();
@@ -107,6 +109,49 @@ void AActionCharacter::OnRollInput(const FInputActionValue& Invalue)
 	}
 }
 
+void AActionCharacter::OnAttackInput(const FInputActionValue& Invalue)
+{
+	if (AnimInstance.IsValid() && Resource->HasEnoughStamina(AttackCost))
+	{
+		if (!AnimInstance->IsAnyMontagePlaying())
+		{
+			Resource->AddStamina(-AttackCost);	// 스태미너 감소
+			PlayAnimMontage(AttackMontage);
+		}
+		else if (AnimInstance->GetCurrentActiveMontage() == AttackMontage)
+		{
+			SectionJumpForCombo();
+		}
+	}
+}
+
+void AActionCharacter::SectionJumpForCombo()
+{
+	if (SectionJumpNotify.IsValid() && bComboReady)
+	{
+		UAnimMontage* Current = AnimInstance->GetCurrentActiveMontage();
+		AnimInstance->Montage_SetNextSection(
+			AnimInstance->Montage_GetCurrentSection(Current),
+			SectionJumpNotify->GetNextSectionName(),
+			Current
+		);
+		Resource->AddStamina(-AttackCost);
+
+		bComboReady = false;
+	}
+}
+
+void AActionCharacter::SpendRunstamina(float DeltaTime)
+{
+	if (IsSprint &&
+		!GetVelocity().IsNearlyZero() && 
+		AnimInstance.IsValid() &&
+		!AnimInstance->IsAnyMontagePlaying())	// 달리기 모드인 상태에서 움직이면 스태미너를 소비한다.
+	{
+		Resource->AddStamina(-3.0f * DeltaTime);	// 스태미너 감소
+	}
+}
+
 void AActionCharacter::SetSprintMode()
 {
 	//UE_LOG(LogTemp, Log, TEXT("달리기"))
@@ -120,4 +165,5 @@ void AActionCharacter::SetWalkMode()
 	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 	IsSprint = false;
 }
+
 

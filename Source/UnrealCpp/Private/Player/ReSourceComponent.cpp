@@ -2,6 +2,7 @@
 
 
 #include "Player/ResourceComponent.h"
+#include "GameFramework/Actor.h"
 
 // Sets default values for this component's properties
 UResourceComponent::UResourceComponent()
@@ -18,8 +19,8 @@ UResourceComponent::UResourceComponent()
 void UResourceComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	Stamina = MaxStamina;
-	CurrentHP = MaxHP;
+	SetCurrentHealth(MaxHP);
+	SetCurrentStamina(MaxStamina);
 	// ...
 	
 }
@@ -30,6 +31,7 @@ void UResourceComponent::StaminaAutoRegenCoolTimerSet()
 	FTimerManager& timerManager = world->GetTimerManager();
 
 	//GetWorldTimerManager().ClearTimer(StaminaCoolTimer);	// 해서 나쁠 것은 없음(SetTimer할 때 이미 내부적으로 처리하고 있다)
+	timerManager.ClearTimer(StaminaRegenTickTimer);
 	timerManager.SetTimer(
 		StaminaAutoRegenCoolTimer,
 		[this]() {
@@ -52,7 +54,7 @@ void UResourceComponent::StaminaAutoRegenCoolTimerSet()
 
 void UResourceComponent::StaminaRegenPerTick()
 {
-	Stamina += StaminaInProve;	
+	Stamina += StaminaInProve;
 
 	if (Stamina > MaxStamina)
 	{
@@ -76,14 +78,15 @@ void UResourceComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 
 void UResourceComponent::AddStamina(float InValue)
 {
-	Stamina += InValue;
-
 	//TimeSinceLastStaminaUse = 0;	// 시간을 직접 제어할 때 쓰던 코드(예시 확인용)
-
+	SetCurrentStamina(FMath::Clamp(Stamina + InValue, 0, MaxStamina));
 	// 스태미너를 소비하고 일정 시간 뒤에 자동재생되게 타이머 세팅
-	StaminaAutoRegenCoolTimerSet();
-	Stamina = FMath::Clamp(Stamina, 0, MaxStamina);
-	OnStaminaChange.Broadcast(Stamina, MaxStamina);
+
+	if (InValue < 0)
+	{
+		StaminaAutoRegenCoolTimerSet();
+
+	}
 	if (Stamina <= 0)
 	{
 		Stamina = 0.0f;
@@ -95,9 +98,9 @@ void UResourceComponent::AddStamina(float InValue)
 
 void UResourceComponent::AddHP(float InValue)
 {
+
 	float HP = CurrentHP + InValue;
-	CurrentHP = FMath::Clamp(HP, 0, MaxHP);
-	OnHPChange.Broadcast(CurrentHP, MaxHP);
+	SetCurrentHealth(FMath::Clamp(HP, 0, MaxHP));
 
 	if (!IsAlive())
 	{

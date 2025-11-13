@@ -14,10 +14,10 @@ class UNREALCPP_API UResourcebarWidget : public UUserWidget
 {
 	GENERATED_BODY()
 public:
-	void UpdateWidget(float InCurrent, float InMax);
+	UFUNCTION(BlueprintCallable)
+	void RefreshWidget(float InCurrent, float InMax);
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Resource", meta = (BindWidget))
-	TObjectPtr<class UProgressBar> Bar;
-
+	TWeakObjectPtr<class UProgressBar> Bar;
 
 };
