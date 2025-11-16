@@ -10,7 +10,10 @@ void UAnimNotifyState_SectionJump::NotifyBegin(USkeletalMeshComponent* MeshComp,
 	const FAnimNotifyEventReference& EventReference)
 {
 	Super::NotifyBegin(MeshComp, Animation, TotalDuration, EventReference);
-	OwnerCharacter = Cast<AActionCharacter>(MeshComp->GetOwner());
+	if (!OwnerCharacter.IsValid())
+	{
+		OwnerCharacter = Cast<AActionCharacter>(MeshComp->GetOwner());
+	}
 	if (OwnerCharacter.IsValid())
 	{
 		OwnerCharacter->SetSectionJumpNotify(this);

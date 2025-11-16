@@ -9,6 +9,7 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Player/ResourceComponent.h"
+#include "Player/WeaponActor.h"
 // Sets default values
 AActionCharacter::AActionCharacter()
 {
@@ -80,6 +81,15 @@ void AActionCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 				SetWalkMode();
 			});
 	}
+}
+
+void AActionCharacter::OnAttackEnable(bool bEnable)
+{
+	if (CurrentWeapon.IsValid())
+	{
+		CurrentWeapon->AttackEnable(bEnable);
+	}
+	
 }
 
 void AActionCharacter::OnMoveInput(const FInputActionValue& Invalue)
