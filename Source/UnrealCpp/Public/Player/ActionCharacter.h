@@ -11,6 +11,7 @@ class UInputAction;
 class USpringArmComponent;
 class UCameraComponent;
 class UResourceComponent;
+class UStatusComponent;
 UCLASS()
 class UNREALCPP_API AActionCharacter : public ACharacter
 {
@@ -34,6 +35,7 @@ public:
 	void OnAttackEnable(bool bEnable);
 
 	UResourceComponent* GetResourceComponent() { return Resource; }
+	UStatusComponent* GetStatusComponent() { return Status; }
 
 	inline void SetSectionJumpNotify(class UAnimNotifyState_SectionJump* InSectionjumpNotify) 
 	{
@@ -63,6 +65,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Player|Resource")
 	TObjectPtr<UResourceComponent> Resource = nullptr;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Player|Status")
+	TObjectPtr<class UStatusComponent> Status = nullptr;
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "input")

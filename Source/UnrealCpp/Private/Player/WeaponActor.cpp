@@ -3,6 +3,8 @@
 
 #include "Player/WeaponActor.h"
 #include "Components//CapsuleComponent.h"
+#include "Player/ActionCharacter.h"
+#include "Player/StatusComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
@@ -34,20 +36,21 @@ void AWeaponActor::BeginPlay()
 
 void AWeaponActor::OnWeaponBeginOverlap(AActor* OverlappedActor, AActor* OtherActor)
 {
-	float FinalDamage = Damage;
+	float finalDamage = Damage;
 	AController* instigator = nullptr;
 	if (WeaponOwner.IsValid())
 	{
-		if (WeaponOwner == OtherActor)
-		{
+		if (WeaponOwner == OtherActor)	// 내가 오버랩될 때는 무시
 			return;
+
+		if (WeaponOwner->GetStatusComponent() != nullptr)	// 스테이터스 컴포넌트가 있으면 공격력 가져와서 추가하기
+		{
+			finalDamage += WeaponOwner->GetStatusComponent()->GetAttackPower();
 		}
-		//FinalDamage += WeaponOwner->GetattackPower();
 		instigator = WeaponOwner->GetController();
 	}
-	UE_LOG(LogTemp, Log, TEXT("OverLapped : %s"), *OtherActor->GetName());
-
-	UGameplayStatics::ApplyDamage(OtherActor, FinalDamage, instigator, this, DamageType);
+	//UE_LOG(LogTemp, Log, TEXT("Overlapped : %s"), *OtherActor->GetName());
+	UGameplayStatics::ApplyDamage(OtherActor, finalDamage, instigator, this, DamageType);
 }
 
 

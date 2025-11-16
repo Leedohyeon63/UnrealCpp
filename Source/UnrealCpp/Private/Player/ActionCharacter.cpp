@@ -7,6 +7,7 @@
 #include "EnhancedInputComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Player/StatusComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Player/ResourceComponent.h"
 #include "Player/WeaponActor.h"
@@ -30,6 +31,8 @@ AActionCharacter::AActionCharacter()
 	GetCharacterMovement()->RotationRate = FRotator(0, 360, 0);
 
 	Resource = CreateDefaultSubobject<UResourceComponent>(TEXT("Resource"));
+	Status = CreateDefaultSubobject<UStatusComponent>(TEXT("PlayerStatus"));
+
 }
 
 // Called when the game starts or when spawned
