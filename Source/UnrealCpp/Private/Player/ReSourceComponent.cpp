@@ -55,7 +55,7 @@ void UResourceComponent::StaminaAutoRegenCoolTimerSet()
 void UResourceComponent::StaminaRegenPerTick()
 {
 	Stamina += StaminaInProve;
-	
+	OnStaminaChange.Broadcast(Stamina, MaxStamina);
 	if (Stamina > MaxStamina)
 	{
 		Stamina = MaxStamina;
@@ -99,8 +99,7 @@ void UResourceComponent::AddStamina(float InValue)
 void UResourceComponent::AddHP(float InValue)
 {
 
-	float HP = CurrentHP + InValue;
-	SetCurrentHealth(FMath::Clamp(HP, 0, MaxHP));
+	SetCurrentHealth(CurrentHP+InValue);
 
 	if (!IsAlive())
 	{

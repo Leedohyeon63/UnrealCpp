@@ -40,6 +40,15 @@ public:
 	// Sets default values for this component's properties
 	UResourceComponent();
 
+	inline void SetMaxHealth(float InValue) {
+		MaxHP = InValue;
+		OnHPChange.Broadcast(CurrentHP, MaxHP);
+	};
+	inline void SetMaxStamina(float InValue) {
+		MaxStamina = InValue;
+		OnStaminaChange.Broadcast(Stamina, MaxStamina);
+	};
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -48,12 +57,12 @@ private:
 	void StaminaRegenPerTick();
 
 	inline void SetCurrentHealth(float InValue) {
-		CurrentHP = InValue;
+		CurrentHP = FMath::Clamp(InValue, 0, MaxHP);
 		OnHPChange.Broadcast(CurrentHP, MaxHP);
 	};
 	inline void SetCurrentStamina(float InValue) {
 		Stamina = InValue;
-		OnHPChange.Broadcast(Stamina, MaxStamina);
+		OnStaminaChange.Broadcast(Stamina, MaxStamina);
 	};
 public:	
 	// Called every frame

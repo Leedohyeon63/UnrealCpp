@@ -15,8 +15,9 @@ class UNREALCPP_API UStatusComponent : public UActorComponent
 public:	
 	// Sets default values for this component's properties
 	UStatusComponent();
-	float GetAttackPower();
-
+	float GetAttackPower() const;
+	float GetMaxHP() const;
+	float GetMaxStamina() const;
 protected:
 	// 힘
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status", meta = (ClampMin = "0", ClampMax = "20"))

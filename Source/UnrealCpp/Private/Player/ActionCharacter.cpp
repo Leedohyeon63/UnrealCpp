@@ -10,7 +10,7 @@
 #include "Player/StatusComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Player/ResourceComponent.h"
-#include "Player/WeaponActor.h"
+#include "Weapon/WeaponActor.h"
 // Sets default values
 AActionCharacter::AActionCharacter()
 {
@@ -38,16 +38,23 @@ AActionCharacter::AActionCharacter()
 // Called when the game starts or when spawned
 void AActionCharacter::BeginPlay()
 {
+	if (Resource)
+	{
+		Resource->OnStaminaEmpty.AddDynamic(this, &AActionCharacter::SetWalkMode);
+		if (Status)
+		{
+			Resource->SetMaxHealth(Status->GetMaxHP());
+			Resource->SetMaxStamina(Status->GetMaxStamina());
+
+			Resource->AddHP(Status->GetMaxHP());
+			Resource->AddStamina(Status->GetMaxStamina());
+		}
+	}
 	Super::BeginPlay();
 	if (GetMesh())
 	{
 		AnimInstance = GetMesh()->GetAnimInstance();	// ABP 객체 가져오기
 	}
-	if (Resource)
-	{
-		Resource->OnStaminaEmpty.AddDynamic(this, &AActionCharacter::SetWalkMode);
-	}
-
 	IsSprint = false;
 }
 
@@ -167,7 +174,7 @@ void AActionCharacter::SpendRunstamina(float DeltaTime)
 		AnimInstance.IsValid() &&
 		!AnimInstance->IsAnyMontagePlaying())	// 달리기 모드인 상태에서 움직이면 스태미너를 소비한다.
 	{
-		Resource->AddStamina(-3.0f * DeltaTime);	// 스태미너 감소
+		Resource->AddStamina(-9.0f * DeltaTime);	// 스태미너 감소
 	}
 }
 
