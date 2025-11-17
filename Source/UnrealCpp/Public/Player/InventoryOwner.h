@@ -4,11 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
-#include "IEquipable.generated.h"
+#include "Common/CommonEnum.h"
+#include "InventoryOwner.generated.h"
 
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI)
-class UIEquipable : public UInterface
+class UInventoryOwner : public UInterface
 {
 	GENERATED_BODY()
 };
@@ -16,15 +17,12 @@ class UIEquipable : public UInterface
 /**
  * 
  */
-class UNREALCPP_API IIEquipable
+class UNREALCPP_API IInventoryOwner
 {
 	GENERATED_BODY()
 
-
-
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "PickUp")
-	void OnPickUp(AActor* Target);
-
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Inventory")
+	void AddItem(EItemCode Code);
 };

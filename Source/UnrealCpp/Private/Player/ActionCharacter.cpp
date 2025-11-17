@@ -1,5 +1,3 @@
-
-
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
@@ -11,6 +9,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Player/ResourceComponent.h"
 #include "Weapon/WeaponActor.h"
+#include "Item/IEquipable.h"
 // Sets default values
 AActionCharacter::AActionCharacter()
 {
@@ -56,6 +55,8 @@ void AActionCharacter::BeginPlay()
 		AnimInstance = GetMesh()->GetAnimInstance();	// ABP 객체 가져오기
 	}
 	IsSprint = false;
+
+	OnActorBeginOverlap.AddDynamic(this, &AActionCharacter::OnBeginOverlap);
 }
 
 // Called every frame
@@ -92,6 +93,13 @@ void AActionCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 			});
 	}
 }
+
+void AActionCharacter::AddItem_Implementation(EItemCode Code)
+{
+	const UEnum* EnumPtr = StaticEnum<EItemCode>();
+	UE_LOG(LogTemp, Log, TEXT("아이템 추가 : %s"), *EnumPtr->GetDisplayNameTextByValue(static_cast<int8>(Code)).ToString());
+}
+
 
 void AActionCharacter::OnAttackEnable(bool bEnable)
 {
@@ -163,7 +171,7 @@ void AActionCharacter::SectionJumpForCombo()
 		);
 		Resource->AddStamina(-AttackCost);
 
-		bComboReady = false;
+		bComboReady = false;	
 	}
 }
 
@@ -190,6 +198,17 @@ void AActionCharacter::SetWalkMode()
 	//UE_LOG(LogTemp, Log, TEXT("걷기"))
 	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 	IsSprint = false;
+}
+
+void AActionCharacter::OnBeginOverlap(AActor* OverlappedActor, AActor* OtherActor)
+{
+	//UE_LOG(LogTemp, Log, TEXT("Char overlap : other is %s"), *OtherActor->GetName());
+
+	// Implements를 이용한 인터페이스 사용
+	if (OtherActor && OtherActor->Implements<UIEquipable>())	// OtherActor가 IPickable인터페이스를 구현했는지 확인
+	{
+		IIEquipable::Execute_OnPickUp(OtherActor, this);	// 구현이 되어 있으면 실행
+	}
 }
 
 

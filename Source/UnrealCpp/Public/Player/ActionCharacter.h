@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
 #include "Notify/AnimNotifyState_SectionJump.h"
+#include "InventoryOwner.h"
 #include "ActionCharacter.generated.h"
 class UInputAction;
 class USpringArmComponent;
@@ -13,7 +14,9 @@ class UCameraComponent;
 class UResourceComponent;
 class UStatusComponent;
 UCLASS()
-class UNREALCPP_API AActionCharacter : public ACharacter
+class UNREALCPP_API AActionCharacter : public ACharacter, public IInventoryOwner
+
+
 {
 	GENERATED_BODY()
 
@@ -31,6 +34,8 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	virtual void AddItem_Implementation(EItemCode Code);
 
 	void OnAttackEnable(bool bEnable);
 
@@ -55,6 +60,10 @@ protected:
 
 	UFUNCTION()
 	void SetWalkMode();
+
+	UFUNCTION()
+	void OnBeginOverlap(AActor* OverlappedActor, AActor* OtherActor);
+
 protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Player|Camera")
@@ -111,6 +120,8 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Player|Weapon")
 	TWeakObjectPtr<class AWeaponActor> CurrentWeapon = nullptr;
+
+
 
 private:
 	UPROPERTY()
