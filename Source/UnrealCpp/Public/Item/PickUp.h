@@ -39,11 +39,20 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<class USphereComponent> BaseRoot = nullptr;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components")
+	TObjectPtr<class UTimelineComponent> PickUpTimeline = nullptr;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PickUp")
 	float RotateSpeed = 180.0f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Pickup")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "PickUp")
 	EItemCode PickupItem = EItemCode::BasicWeapon;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "PickUp")
+	TObjectPtr<UCurveFloat> ScaleCurve = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PickUp")
+	float Duration = 3.0f;
 private:
 	UFUNCTION()
 	void OnPickUpOverLap(UPrimitiveComponent* OverlappedComponent, 
@@ -52,4 +61,15 @@ private:
 		int32 OtherBodyIndex, 
 		bool bFromSweep, 
 		const FHitResult& SweepResult);
+
+	UFUNCTION()
+	void OnScaleUpdate(float InValue);
+
+	UFUNCTION()
+	void OnScaleFinish();
+
+private:
+	TWeakObjectPtr<AActor> PickupOwner = nullptr;
+
+	bool bPickuped = false;
 };

@@ -31,10 +31,11 @@ APickUp::APickUp()
 	PickUpOverlap->SetSphereRadius(100.0f);
 	PickUpOverlap->SetCollisionProfileName(TEXT("OverlapOnlyPawn"));
 
-
-
 	Niagara = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Effect"));
 	Niagara->SetupAttachment(BaseRoot);
+
+	PickUpTimeline = CreateDefaultSubobject<UTimelineComponent>(TEXT("PickupTimeline"));
+
 }
 
 
@@ -44,11 +45,31 @@ APickUp::APickUp()
 // Called when the game starts or when spawned
 void APickUp::BeginPlay()
 {
+
 	Super::BeginPlay();
+
+	bPickuped = false;
+
 	if (PickUpOverlap)
 	{
 		PickUpOverlap->OnComponentBeginOverlap.AddDynamic(this, &APickUp::OnPickUpOverLap);
 	}
+
+	if (PickUpTimeline)
+	{
+		if (ScaleCurve)
+		{
+			FOnTimelineFloat ScaleUpdateDelegate;
+			ScaleUpdateDelegate.BindUFunction(this, FName("OnScaleUpdate"));
+			PickUpTimeline->AddInterpFloat(ScaleCurve, ScaleUpdateDelegate);
+
+			FOnTimelineEvent ScaleFinishDelegate;
+			ScaleFinishDelegate.BindUFunction(this, FName("OnScaleFinish"));
+			PickUpTimeline->SetTimelineFinishedFunc(ScaleFinishDelegate);
+		}
+	}
+
+	PickUpTimeline->SetPlayRate(1/Duration);
 }
 
 // Called every frame
@@ -61,14 +82,11 @@ void APickUp::Tick(float DeltaTime)
 
 void APickUp::OnPickUp_Implementation(AActor* Target)
 {
-	if (Target && Target->Implements<UInventoryOwner>())
+	if (!bPickuped)
 	{
-		IInventoryOwner::Execute_AddItem(Target, PickupItem);
-		SetActorEnableCollision(false);
-
-
-
-
+		bPickuped = true;
+		PickupOwner = Target;
+		PickUpTimeline->PlayFromStart();
 	}
 }
 
@@ -81,6 +99,21 @@ void APickUp::OnPickUpOverLap(UPrimitiveComponent* OverlappedComponent,
 {
 	UE_LOG(LogTemp, Log, TEXT("pickup"))
 }
+
+void APickUp::OnScaleUpdate(float InValue)
+{
+	FVector NewScale = FVector::One() * InValue;
+	SetActorScale3D(NewScale);
+}
+
+void APickUp::OnScaleFinish()
+{
+	if (PickupOwner.IsValid() && PickupOwner->Implements<UInventoryOwner>())
+	{
+		IInventoryOwner::Execute_AddItem(PickupOwner.Get(), PickupItem);
+	}
+}
+
 
 
 
