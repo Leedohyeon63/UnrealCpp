@@ -140,6 +140,7 @@ void AActionCharacter::OnRollInput(const FInputActionValue& Invalue)
 
 void AActionCharacter::OnAttackInput(const FInputActionValue& Invalue)
 {
+	
 	if (AnimInstance.IsValid() && Resource->HasEnoughStamina(AttackCost))
 	{
 		if (!AnimInstance->IsAnyMontagePlaying())
@@ -156,6 +157,8 @@ void AActionCharacter::OnAttackInput(const FInputActionValue& Invalue)
 
 void AActionCharacter::OnJumpInput(const FInputActionValue& Invalue)
 {
+
+
 	Jump();
 }
 

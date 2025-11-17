@@ -37,6 +37,10 @@ APickUp::APickUp()
 	Niagara->SetupAttachment(BaseRoot);
 }
 
+
+
+
+
 // Called when the game starts or when spawned
 void APickUp::BeginPlay()
 {
@@ -60,6 +64,11 @@ void APickUp::OnPickUp_Implementation(AActor* Target)
 	if (Target && Target->Implements<UInventoryOwner>())
 	{
 		IInventoryOwner::Execute_AddItem(Target, PickupItem);
+		SetActorEnableCollision(false);
+
+
+
+
 	}
 }
 
