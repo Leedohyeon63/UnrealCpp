@@ -52,6 +52,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void OnWeaponThrowaway();
 
+
+	UFUNCTION(BlueprintCallable)
+	void OnCurrentWeaponThrowaway();
 protected:
 	void OnMoveInput(const FInputActionValue& Invalue);
 	void OnRollInput(const FInputActionValue& Invalue);
@@ -128,6 +131,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player|Weapon")
 	TMap<EItemCode, TSubclassOf<AActor>> UsedWeapon;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player|Weapon")
+	TMap<EItemCode, TSubclassOf<AActor>> ReusableWeapon;
 private:
 	UPROPERTY()
 	TWeakObjectPtr<UAnimInstance> AnimInstance = nullptr;
@@ -145,7 +151,6 @@ private:
 	//bool bWeaponUseEnded = false;
 private:
 	void SectionJumpForCombo();
-	void SpendRunstamina(float DeltaTime
-	
-	);
+	void SpendRunstamina(float DeltaTime);
+	void DropCurrentWeapon();
 };

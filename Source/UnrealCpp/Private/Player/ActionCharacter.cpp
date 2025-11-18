@@ -111,6 +111,11 @@ void AActionCharacter::OnAttackEnable(bool bEnable)
 	
 }
 
+void AActionCharacter::OnCurrentWeaponThrowaway()
+{
+	DropCurrentWeapon();
+}
+
 void AActionCharacter::OnMoveInput(const FInputActionValue& Invalue)
 {
 	FVector2D InputDir = Invalue.Get<FVector2D>();
@@ -190,6 +195,19 @@ void AActionCharacter::OnWeaponThrowaway()
 			GetActorRotation());			// FRotator()를 캐릭터의 forward 방향을 바라보는 회전으로 대체하기
 	}
 }
+void AActionCharacter::DropCurrentWeapon()
+{
+	if (CurrentWeapon.IsValid() && (CurrentWeapon->GetItemCode() != EItemCode::BasicWeapon))
+	{
+		if (TSubclassOf<AActor>* ReusableClass = ReusableWeapon.Find(CurrentWeapon->GetItemCode()))
+		{
+			GetWorld()->SpawnActor<AActor>(
+				*ReusableClass,
+				GetActorLocation() + GetActorForwardVector() * 100.0f,
+				GetActorRotation());
+		}
+	}
+}
 
 
 void AActionCharacter::SectionJumpForCombo()
@@ -221,6 +239,7 @@ void AActionCharacter::SpendRunstamina(float DeltaTime)
 		Resource->AddStamina(-9.0f * DeltaTime);	// 스태미너 감소
 	}
 }
+
 
 void AActionCharacter::SetSprintMode()
 {
