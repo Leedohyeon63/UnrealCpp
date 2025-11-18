@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Player/ActionCharacter.h"
+#include "Common/CommonEnum.h"
 #include "WeaponActor.generated.h"
 
 UCLASS()
@@ -32,8 +33,15 @@ public:
 	virtual	void PostInitializeComponents() override;
 
 	UFUNCTION(BlueprintCallable)
-	inline void SetWeaponOwner(AActionCharacter* InOwner) { WeaponOwner = InOwner; }
+	virtual void OnAttack(){};
 
+	UFUNCTION(BlueprintCallable)
+	virtual void OnWeaponPickuped(AActionCharacter* InOwener);
+	//이 무기로 공격 가능한지 확인
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	virtual bool CanAttack() { return true; }
+
+	inline EItemCode GetItemCode() { return WeaponID; }
 protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
@@ -47,6 +55,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Data")
 	TSubclassOf<UDamageType> DamageType = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Data")
+	EItemCode WeaponID = EItemCode::BasicWeapon;
 private:
 	TWeakObjectPtr<AActionCharacter> WeaponOwner = nullptr;
 };

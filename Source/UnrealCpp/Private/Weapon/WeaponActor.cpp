@@ -79,3 +79,8 @@ void AWeaponActor::PostInitializeComponents()
 	WeaponCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
+void AWeaponActor::OnWeaponPickuped(AActionCharacter* InOwener)
+{
+	WeaponOwner = InOwener;
+}
+

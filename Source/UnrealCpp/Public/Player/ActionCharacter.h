@@ -49,6 +49,9 @@ public:
 
 	}
 
+	UFUNCTION(BlueprintCallable)
+	void OnWeaponThrowaway();
+
 protected:
 	void OnMoveInput(const FInputActionValue& Invalue);
 	void OnRollInput(const FInputActionValue& Invalue);
@@ -64,6 +67,9 @@ protected:
 	UFUNCTION()
 	void OnBeginOverlap(AActor* OverlappedActor, AActor* OtherActor);
 
+	//UFUNCTION(BlueprintCallable, Category = "Player")
+	//void OnWeaponUseEnded();
+
 protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Player|Camera")
@@ -77,7 +83,6 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Player|Status")
 	TObjectPtr<class UStatusComponent> Status = nullptr;
-
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "input")
 	TObjectPtr<UInputAction> IA_Move = nullptr;
@@ -121,8 +126,8 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Player|Weapon")
 	TWeakObjectPtr<class AWeaponActor> CurrentWeapon = nullptr;
 
-
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player|Weapon")
+	TMap<EItemCode, TSubclassOf<AActor>> UsedWeapon;
 private:
 	UPROPERTY()
 	TWeakObjectPtr<UAnimInstance> AnimInstance = nullptr;
@@ -132,6 +137,12 @@ private:
 
 	bool bComboReady = false;
 
+	UFUNCTION()
+	void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);
+
+
+	//UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Player|Weapon", meta = (AllowPrivateAccess = "true"))
+	//bool bWeaponUseEnded = false;
 private:
 	void SectionJumpForCombo();
 	void SpendRunstamina(float DeltaTime

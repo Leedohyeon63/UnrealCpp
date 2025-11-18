@@ -49,10 +49,20 @@ protected:
 	EItemCode PickupItem = EItemCode::BasicWeapon;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "PickUp")
-	TObjectPtr<UCurveFloat> ScaleCurve = nullptr;
+	TObjectPtr<UCurveFloat> ScaleCurve = nullptr;//스케일 커브
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "PickUp")
+	TObjectPtr<UCurveFloat> DistanceCurve = nullptr;//거리 보간 커브
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "PickUp")
+	TObjectPtr<UCurveFloat> HeightCurve = nullptr;//높이 커브
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PickUp")
 	float Duration = 3.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PickUp")
+	float PickupHeight = 0.5f;
+
 private:
 	UFUNCTION()
 	void OnPickUpOverLap(UPrimitiveComponent* OverlappedComponent, 
@@ -63,13 +73,15 @@ private:
 		const FHitResult& SweepResult);
 
 	UFUNCTION()
-	void OnScaleUpdate(float InValue);
+	void OnTimelineUpdate(float InValue);
 
 	UFUNCTION()
-	void OnScaleFinish();
+	void OnTimelineFinish();
 
 private:
 	TWeakObjectPtr<AActor> PickupOwner = nullptr;
 
 	bool bPickuped = false;
+	//획득했을 때 메시 위치
+	FVector PickupStartLocation;
 };

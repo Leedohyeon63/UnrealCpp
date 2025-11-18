@@ -59,13 +59,13 @@ void APickUp::BeginPlay()
 	{
 		if (ScaleCurve)
 		{
-			FOnTimelineFloat ScaleUpdateDelegate;
-			ScaleUpdateDelegate.BindUFunction(this, FName("OnScaleUpdate"));
-			PickUpTimeline->AddInterpFloat(ScaleCurve, ScaleUpdateDelegate);
+			FOnTimelineFloat UpdateDelegate;
+			UpdateDelegate.BindUFunction(this, FName("OnTimelineUpdate"));
+			PickUpTimeline->AddInterpFloat(DistanceCurve, UpdateDelegate);
 
-			FOnTimelineEvent ScaleFinishDelegate;
-			ScaleFinishDelegate.BindUFunction(this, FName("OnScaleFinish"));
-			PickUpTimeline->SetTimelineFinishedFunc(ScaleFinishDelegate);
+			FOnTimelineEvent FinishDelegate;
+			FinishDelegate.BindUFunction(this, FName("OnTimelineFinish"));
+			PickUpTimeline->SetTimelineFinishedFunc(FinishDelegate);
 		}
 	}
 
@@ -86,32 +86,52 @@ void APickUp::OnPickUp_Implementation(AActor* Target)
 	{
 		bPickuped = true;
 		PickupOwner = Target;
+		PickupStartLocation = Mesh->GetRelativeLocation() + GetActorLocation();//메시의 월드 위치
+
+		SetActorEnableCollision(false);
+		BaseRoot->SetSimulatePhysics(false);
 		PickUpTimeline->PlayFromStart();
+
 	}
 }
 
-void APickUp::OnPickUpOverLap(UPrimitiveComponent* OverlappedComponent, 
-	AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, 
-	int32 OtherBodyIndex,
-	bool bFromSweep, const 
-	FHitResult& SweepResult)
+void APickUp::OnPickUpOverLap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	UE_LOG(LogTemp, Log, TEXT("pickup"))
 }
 
-void APickUp::OnScaleUpdate(float InValue)
+void APickUp::OnTimelineUpdate(float InValue)
 {
-	FVector NewScale = FVector::One() * InValue;
-	SetActorScale3D(NewScale);
+	//타임라인 진행 시간
+	float CurrentTime = PickUpTimeline->GetPlaybackPosition();
+	//UE_LOG(LogTemp, Log, TEXT("Timeline : %.2f"), CurrentTime);
+
+	//현재 커브 값 받아오기
+	float DistanceValue = InValue;
+	float HeightValue = HeightCurve? HeightCurve->GetFloatValue(CurrentTime) : 0.0f;
+	float ScaleValue = ScaleCurve ? ScaleCurve->GetFloatValue(CurrentTime) : 1.0f;
+
+	//UE_LOG(LogTemp, Log, TEXT("DistanceValue : %.2f"), DistanceValue);
+	//UE_LOG(LogTemp, Log, TEXT("DistanceValue : %.2f"), DistanceValue);
+	UE_LOG(LogTemp, Log, TEXT("ScaleValue : %.2f"), ScaleValue);
+
+	//커브 값을 기준으로 새 위치와 스케일 계산
+	FVector NewLocation = FMath::Lerp(PickupStartLocation, PickupOwner.Get()->GetActorLocation(), DistanceValue);
+	NewLocation += HeightValue* PickupHeight* FVector::UpVector;
+
+	Mesh->SetWorldLocation(NewLocation);
+
+	FVector NewScale = FVector::One() * ScaleValue;
+	Mesh->SetRelativeScale3D(NewScale);
 }
 
-void APickUp::OnScaleFinish()
+void APickUp::OnTimelineFinish()
 {
 	if (PickupOwner.IsValid() && PickupOwner->Implements<UInventoryOwner>())
 	{
 		IInventoryOwner::Execute_AddItem(PickupOwner.Get(), PickupItem);
 	}
+	Destroy();
+
 }
 
 

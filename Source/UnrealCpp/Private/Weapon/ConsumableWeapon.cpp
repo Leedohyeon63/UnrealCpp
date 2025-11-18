@@ -3,3 +3,18 @@
 
 #include "Weapon/ConsumableWeapon.h"
 
+void AConsumableWeapon::OnAttack()
+{
+	CurrentUseCount--;
+	UE_LOG(LogTemp, Log, TEXT("%d"), CurrentUseCount);
+	if (CurrentUseCount <= 0)
+	{
+		OnWeaponUseEnded.Broadcast();
+	}
+}
+
+void AConsumableWeapon::OnWeaponPickuped(AActionCharacter* InOwner)
+{
+	Super::OnWeaponPickuped(InOwner);
+	CurrentUseCount = MaxUseCount;
+}

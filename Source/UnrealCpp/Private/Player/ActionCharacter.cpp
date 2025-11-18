@@ -53,6 +53,7 @@ void AActionCharacter::BeginPlay()
 	if (GetMesh())
 	{
 		AnimInstance = GetMesh()->GetAnimInstance();	// ABP 객체 가져오기
+
 	}
 	IsSprint = false;
 
@@ -141,26 +142,55 @@ void AActionCharacter::OnRollInput(const FInputActionValue& Invalue)
 void AActionCharacter::OnAttackInput(const FInputActionValue& Invalue)
 {
 	
-	if (AnimInstance.IsValid() && Resource->HasEnoughStamina(AttackCost))
+	if (AnimInstance.IsValid() && Resource->HasEnoughStamina(AttackCost)&& (CurrentWeapon.IsValid() && CurrentWeapon->CanAttack()))
 	{
 		if (!AnimInstance->IsAnyMontagePlaying())
 		{
 			Resource->AddStamina(-AttackCost);	// 스태미너 감소
 			PlayAnimMontage(AttackMontage);
+			FOnMontageEnded OnMontageEnded;
+			OnMontageEnded.BindUObject(this, &AActionCharacter::OnAttackMontageEnded);
+			AnimInstance->Montage_SetEndDelegate(OnMontageEnded);
+
+			if (CurrentWeapon.IsValid())
+			{
+				CurrentWeapon->OnAttack();
+			}
 		}
 		else if (AnimInstance->GetCurrentActiveMontage() == AttackMontage)
 		{
 			SectionJumpForCombo();
+
 		}
 	}
+
+	
 }
 
 void AActionCharacter::OnJumpInput(const FInputActionValue& Invalue)
 {
-
-
 	Jump();
 }
+
+void AActionCharacter::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted)
+{
+	OnWeaponThrowaway();
+}
+
+void AActionCharacter::OnWeaponThrowaway()
+{
+	if (CurrentWeapon.IsValid() && !CurrentWeapon->CanAttack())	// CurrentWeapon이 공격할 수 없으면(=사용회수가 안남았다)
+	{
+		UE_LOG(LogTemp, Log, TEXT("다쓴 무기 버리기"));
+		TSubclassOf<AActor>* usedClass = UsedWeapon.Find(CurrentWeapon->GetItemCode());
+
+		GetWorld()->SpawnActor<AActor>(
+			*usedClass,
+			GetActorLocation() + GetActorForwardVector() * 100.0f,
+			GetActorRotation());			// FRotator()를 캐릭터의 forward 방향을 바라보는 회전으로 대체하기
+	}
+}
+
 
 void AActionCharacter::SectionJumpForCombo()
 {
@@ -173,7 +203,10 @@ void AActionCharacter::SectionJumpForCombo()
 			Current
 		);
 		Resource->AddStamina(-AttackCost);
-
+		if (CurrentWeapon.IsValid())
+		{
+			CurrentWeapon->OnAttack();
+		}
 		bComboReady = false;	
 	}
 }
@@ -213,5 +246,11 @@ void AActionCharacter::OnBeginOverlap(AActor* OverlappedActor, AActor* OtherActo
 		IIEquipable::Execute_OnPickUp(OtherActor, this);	// 구현이 되어 있으면 실행
 	}
 }
+
+//void AActionCharacter::OnWeaponUseEnded()
+//{
+//	UE_LOG(LogTemp, Log, TEXT("무기 사용 끝"));
+//
+//}
 
 
