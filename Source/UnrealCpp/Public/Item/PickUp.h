@@ -42,11 +42,14 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<class UTimelineComponent> PickUpTimeline = nullptr;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PickUp")
-	float RotateSpeed = 180.0f;
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "PickUp")
 	EItemCode PickupItem = EItemCode::BasicWeapon;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PickUp")
+	float PickupTime = 3.0f;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PickUp")
+	float RotateSpeed = 180.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "PickUp")
 	TObjectPtr<UCurveFloat> ScaleCurve = nullptr;//스케일 커브
@@ -84,4 +87,6 @@ private:
 	bool bPickuped = false;
 	//획득했을 때 메시 위치
 	FVector PickupStartLocation;
+
+	FTimerHandle PickupableTimer;
 };

@@ -29,7 +29,8 @@ APickUp::APickUp()
 	PickUpOverlap = CreateDefaultSubobject<USphereComponent>(TEXT("Overlap"));
 	PickUpOverlap->SetupAttachment(BaseRoot);
 	PickUpOverlap->SetSphereRadius(100.0f);
-	PickUpOverlap->SetCollisionProfileName(TEXT("OverlapOnlyPawn"));
+	//PickUpOverlap->SetCollisionProfileName(TEXT("OverlapOnlyPawn"));
+	PickUpOverlap->SetCollisionProfileName(TEXT("NoCollision"));
 
 	Niagara = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Effect"));
 	Niagara->SetupAttachment(BaseRoot);
@@ -67,9 +68,22 @@ void APickUp::BeginPlay()
 			FinishDelegate.BindUFunction(this, FName("OnTimelineFinish"));
 			PickUpTimeline->SetTimelineFinishedFunc(FinishDelegate);
 		}
+
+		PickUpTimeline->SetPlayRate(1 / Duration);
 	}
 
-	PickUpTimeline->SetPlayRate(1/Duration);
+	FTimerManager& timerManager = GetWorldTimerManager();
+
+	timerManager.ClearTimer(PickupableTimer);
+
+	timerManager.SetTimer(
+		PickupableTimer,
+		[this]() {
+			PickUpOverlap->SetCollisionProfileName(TEXT("OverlapOnlyPawn"));
+		},
+		PickupTime, false);
+
+	bPickuped = false;
 }
 
 // Called every frame

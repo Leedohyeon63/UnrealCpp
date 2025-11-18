@@ -25,12 +25,17 @@ AActionCharacter::AActionCharacter()
 	PlayerCamera->SetupAttachment(Springarm);
 	PlayerCamera->SetRelativeRotation(FRotator(-20.0f,0.0f,0.0f));
 
+	DropLocation = CreateDefaultSubobject<USceneComponent>(TEXT("DropLocation"));
+	DropLocation->SetupAttachment(RootComponent);
+
 	bUseControllerRotationYaw = false;
 	GetCharacterMovement()->bOrientRotationToMovement = true; //이동 방향을 바라보게 회전
 	GetCharacterMovement()->RotationRate = FRotator(0, 360, 0);
 
 	Resource = CreateDefaultSubobject<UResourceComponent>(TEXT("Resource"));
 	Status = CreateDefaultSubobject<UStatusComponent>(TEXT("PlayerStatus"));
+
+
 
 }
 
@@ -188,11 +193,16 @@ void AActionCharacter::OnWeaponThrowaway()
 	{
 		UE_LOG(LogTemp, Log, TEXT("다쓴 무기 버리기"));
 		TSubclassOf<AActor>* usedClass = UsedWeapon.Find(CurrentWeapon->GetItemCode());
-
-		GetWorld()->SpawnActor<AActor>(
-			*usedClass,
-			GetActorLocation() + GetActorForwardVector() * 100.0f,
-			GetActorRotation());			// FRotator()를 캐릭터의 forward 방향을 바라보는 회전으로 대체하기
+		if (usedClass)
+		{
+			GetWorld()->SpawnActor<AActor>(
+				*usedClass,
+				DropLocation->GetComponentLocation(),
+				GetActorRotation()
+			);
+		}
+		
+		// FRotator()를 캐릭터의 forward 방향을 바라보는 회전으로 대체하기
 	}
 }
 void AActionCharacter::DropCurrentWeapon()
@@ -203,8 +213,9 @@ void AActionCharacter::DropCurrentWeapon()
 		{
 			GetWorld()->SpawnActor<AActor>(
 				*ReusableClass,
-				GetActorLocation() + GetActorForwardVector() * 100.0f,
-				GetActorRotation());
+				DropLocation->GetComponentLocation(),
+				GetActorRotation()
+			);
 		}
 	}
 }
