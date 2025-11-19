@@ -7,6 +7,7 @@
 #include "InputActionValue.h"
 #include "Notify/AnimNotifyState_SectionJump.h"
 #include "InventoryOwner.h"
+#include "Player/WeaponManager.h"
 #include "ActionCharacter.generated.h"
 class UInputAction;
 class USpringArmComponent;
@@ -89,6 +90,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Player|Weapon")
 	TObjectPtr<USceneComponent> DropLocation = nullptr;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Player|Weapon")
+	TObjectPtr<class UWeaponManager> WeaponManager = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "input")
 	TObjectPtr<UInputAction> IA_Move = nullptr;

@@ -35,6 +35,7 @@ AActionCharacter::AActionCharacter()
 	Resource = CreateDefaultSubobject<UResourceComponent>(TEXT("Resource"));
 	Status = CreateDefaultSubobject<UStatusComponent>(TEXT("PlayerStatus"));
 
+	WeaponManager = CreateDefaultSubobject<UWeaponManager>(TEXT("WeaponManager"));
 
 
 }
