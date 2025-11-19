@@ -15,6 +15,9 @@ UCLASS()
 class UNREALCPP_API AConsumableWeapon : public AWeaponActor
 {
 	GENERATED_BODY()
+protected:
+	virtual void BeginPlay() override;
+	virtual void OnWeaponActivate() override;
 public:
 	virtual void OnAttack() override;
 	virtual void OnWeaponPickuped() override;

@@ -16,6 +16,8 @@ class UNREALCPP_API AWeaponActor : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AWeaponActor();
+	virtual void OnWeaponActivate() {};
+	virtual void OnWeaponDeactivate() {};
 
 protected:
 	// Called when the game starts or when spawned

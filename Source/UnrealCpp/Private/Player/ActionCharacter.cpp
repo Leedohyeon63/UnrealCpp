@@ -27,6 +27,7 @@ AActionCharacter::AActionCharacter()
 
 	DropLocation = CreateDefaultSubobject<USceneComponent>(TEXT("DropLocation"));
 	DropLocation->SetupAttachment(RootComponent);
+	DropLocation->SetRelativeLocation(FVector(80.0f, 30.0f, 0.0f));
 
 	bUseControllerRotationYaw = false;
 	GetCharacterMovement()->bOrientRotationToMovement = true; //이동 방향을 바라보게 회전

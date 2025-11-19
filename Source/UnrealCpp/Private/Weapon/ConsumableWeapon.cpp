@@ -3,6 +3,17 @@
 
 #include "Weapon/ConsumableWeapon.h"
 
+void AConsumableWeapon::BeginPlay()
+{
+	Super::BeginPlay();
+	CurrentUseCount = MaxUseCount;
+}
+
+void AConsumableWeapon::OnWeaponActivate()
+{
+	CurrentUseCount = MaxUseCount;
+}
+
 void AConsumableWeapon::OnAttack()
 {
 	CurrentUseCount--;
