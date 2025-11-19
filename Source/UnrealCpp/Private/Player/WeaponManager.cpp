@@ -31,6 +31,13 @@ void UWeaponManager::BeginPlay()
 	OwnerPlayer->EquipWeapon(EItemCode::BasicWeapon);
 }
 
+TSubclassOf<APickUp> UWeaponManager::GetPickupWeaponClass(EItemCode InType) const
+{
+	const UWeaponDataAsset* dataAsset = *WeaponDatabase.Find(InType);
+	return dataAsset->PickupWeaponClass;
+}
+
+
 void UWeaponManager::ValidateWeaponDataBase()
 {
 	if (WeaponDatabase.Num() <= 0)

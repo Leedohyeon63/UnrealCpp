@@ -144,12 +144,16 @@ void APickUp::OnTimelineFinish()
 {
 	if (PickupOwner.IsValid() && PickupOwner->Implements<UInventoryOwner>())
 	{
-		IInventoryOwner::Execute_AddItem(PickupOwner.Get(), PickupItem);
+		IInventoryOwner::Execute_AddItem(PickupOwner.Get(), PickupItem, PickupCount);
 	}
 	Destroy();
 
 }
 
+void APickUp::AddImpulse(FVector& Velocity)
+{
+	BaseRoot->AddImpulse(Velocity, NAME_None, true);
+}
 
 
 

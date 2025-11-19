@@ -41,7 +41,7 @@ public:
 	virtual void OnAttack(){};
 
 	UFUNCTION(BlueprintCallable)
-	virtual void OnWeaponPickuped();
+	virtual void OnWeaponPickuped(int InCount);
 	//이 무기로 공격 가능한지 확인
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	virtual bool CanAttack() { return true; }

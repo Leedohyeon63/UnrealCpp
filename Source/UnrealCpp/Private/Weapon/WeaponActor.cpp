@@ -126,7 +126,6 @@ void AWeaponActor::WeaponActivate(bool bActivate)
 	//}
 }
 
-void AWeaponActor::OnWeaponPickuped()
+void AWeaponActor::OnWeaponPickuped(int InCount)
 {
 }
-

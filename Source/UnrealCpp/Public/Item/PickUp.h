@@ -26,6 +26,8 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	virtual void OnPickUp_Implementation(AActor* Target) override;
+	inline void SetPickupCount(int32 InCount) { PickupCount = InCount; }
+	void AddImpulse(FVector& Velocity);
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<USkeletalMeshComponent> Mesh = nullptr;
@@ -50,6 +52,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PickUp")
 	float RotateSpeed = 180.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Pickup")
+	int32 PickupCount = 1;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "PickUp")
 	TObjectPtr<UCurveFloat> ScaleCurve = nullptr;//스케일 커브

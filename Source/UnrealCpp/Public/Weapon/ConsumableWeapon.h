@@ -20,8 +20,9 @@ protected:
 	virtual void OnWeaponActivate() override;
 public:
 	virtual void OnAttack() override;
-	virtual void OnWeaponPickuped() override;
+	virtual void OnWeaponPickuped(int InCount) override;
 	virtual bool CanAttack() override { return CurrentUseCount > 0; }
+	int32 GetRemainingUseCount() const { return CurrentUseCount; }
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Data")
 	int32 MaxUseCount = 10;

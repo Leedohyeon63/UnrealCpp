@@ -36,7 +36,7 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	virtual void AddItem_Implementation(EItemCode Code);
+	virtual void AddItem_Implementation(EItemCode Code, int32 Count);
 
 	void OnAttackEnable(bool bEnable);
 
@@ -56,8 +56,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void OnWeaponThrowaway();
 
-	UFUNCTION(BlueprintCallable, Category = "Weapon")
-	void DropWeapon(EItemCode WeaponCode);
+	//UFUNCTION(BlueprintCallable, Category = "Weapon")
+	//void DropWeapon(EItemCode WeaponCode);
 
 	UFUNCTION(BlueprintCallable)
 	void OnCurrentWeaponThrowaway();
@@ -164,5 +164,6 @@ private:
 private:
 	void SectionJumpForCombo();
 	void SpendRunstamina(float DeltaTime);
-	void DropCurrentWeapon();
+	void DropCurrentWeapon(EItemCode WeaponCode);
+	void DropWeapon(EItemCode WeaponCode);
 };

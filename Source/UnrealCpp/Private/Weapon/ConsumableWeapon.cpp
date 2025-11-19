@@ -24,8 +24,9 @@ void AConsumableWeapon::OnAttack()
 	}
 }
 
-void AConsumableWeapon::OnWeaponPickuped()
+void AConsumableWeapon::OnWeaponPickuped(int InCount)
 {
-	Super::OnWeaponPickuped();
-	CurrentUseCount = MaxUseCount;
+	// 현재 사용되는 곳 없음
+	Super::OnWeaponPickuped(InCount);
+	CurrentUseCount = InCount;
 }
