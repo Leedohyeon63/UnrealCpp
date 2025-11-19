@@ -200,7 +200,12 @@ void AActionCharacter::OnJumpInput(const FInputActionValue& Invalue)
 
 void AActionCharacter::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted)
 {
-	OnWeaponThrowaway();
+	if (CurrentWeapon.IsValid() && !CurrentWeapon->CanAttack())	// CurrentWeapon이 공격할 수 없으면(=사용회수가 안남았다)
+	{
+		//DropUsedWeapon();		
+		DropWeapon(CurrentWeapon->GetItemCode());	// 현재 사용 중인 무기 버리기
+		EquipWeapon(EItemCode::BasicWeapon);
+	}
 }
 
 void AActionCharacter::OnWeaponThrowaway()
@@ -221,6 +226,19 @@ void AActionCharacter::OnWeaponThrowaway()
 		// FRotator()를 캐릭터의 forward 방향을 바라보는 회전으로 대체하기
 	}
 }
+void AActionCharacter::DropWeapon(EItemCode WeaponCode)
+{
+	UE_LOG(LogTemp, Log, TEXT("다쓴 무기 버리기"));
+	if (TSubclassOf<AUsedWeapon> usedClass = WeaponManager->GetUsedWeaponClass(WeaponCode))
+	{
+		GetWorld()->SpawnActor<AActor>(
+			usedClass,
+			DropLocation->GetComponentLocation(),
+			GetActorRotation());
+	}
+}
+
+
 void AActionCharacter::DropCurrentWeapon()
 {
 	if (CurrentWeapon.IsValid() && (CurrentWeapon->GetItemCode() != EItemCode::BasicWeapon))

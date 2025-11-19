@@ -56,6 +56,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void OnWeaponThrowaway();
 
+	UFUNCTION(BlueprintCallable, Category = "Weapon")
+	void DropWeapon(EItemCode WeaponCode);
 
 	UFUNCTION(BlueprintCallable)
 	void OnCurrentWeaponThrowaway();

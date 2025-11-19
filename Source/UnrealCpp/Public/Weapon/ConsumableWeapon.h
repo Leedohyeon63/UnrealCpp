@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Weapon/WeaponActor.h"
+#include "Item/ConsumableInterface.h"
 #include "ConsumableWeapon.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponUseEnded);
@@ -26,5 +27,5 @@ protected:
 	int32 CurrentUseCount = 10;
 
 	UPROPERTY(BlueprintAssignable, BlueprintReadWrite, Category = "Weapon")
-	FOnWeaponUseEnded OnWeaponUseEnded;
+	FOnConsume OnWeaponUseEnded;
 };

@@ -9,7 +9,7 @@ void AConsumableWeapon::OnAttack()
 	UE_LOG(LogTemp, Log, TEXT("%d"), CurrentUseCount);
 	if (CurrentUseCount <= 0)
 	{
-		OnWeaponUseEnded.Broadcast();
+		OnWeaponUseEnded.Broadcast(WeaponID);
 	}
 }
 
