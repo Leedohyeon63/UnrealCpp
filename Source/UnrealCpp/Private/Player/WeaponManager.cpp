@@ -23,7 +23,12 @@ void UWeaponManager::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
+	OwnerPlayer = Cast<AActionCharacter>(GetOwner());
+
 	ValidateWeaponDataBase();
+	SpawnWeaponInstances();
+
+	OwnerPlayer->EquipWeapon(EItemCode::BasicWeapon);
 }
 
 void UWeaponManager::ValidateWeaponDataBase()
@@ -51,5 +56,60 @@ void UWeaponManager::ValidateWeaponDataBase()
 		}
 	}
 }
+
+AWeaponActor* UWeaponManager::GetEquippedWeapon(EItemCode InType) const
+{
+	//if (const TObjectPtr<AWeaponActor>* weapon = WeaponInstances.Find(InType))
+	//{
+	//	return *weapon;
+	//}
+
+	AWeaponActor* weapon = nullptr;
+	if (WeaponInstances.Contains(InType))
+	{
+		weapon = WeaponInstances[InType];
+	}
+
+	return weapon;
+}
+
+TSubclassOf<AUsedWeapon> UWeaponManager::GetUsedWeaponClass(EItemCode InType) const
+{
+	const UWeaponDataAsset* dataAsset = *WeaponDatabase.Find(InType);
+	return dataAsset->UsedWaeponClass;
+}
+
+
+void UWeaponManager::SpawnWeaponInstances()
+{
+	// 불필요한 중괄호 제거
+	WeaponInstances.Empty(WeaponDatabase.Num());
+
+	if (OwnerPlayer.IsValid())
+	{
+		UWorld* world = GetWorld();
+		FVector defaultLocation = FVector(0.0f, 0.0f, -10000.0f);
+		for (const auto& pair : WeaponDatabase)
+		{
+			AWeaponActor* weapon = world->SpawnActor<AWeaponActor>(
+				pair.Value->EquippedWeaponClass,
+				defaultLocation,
+				FRotator::ZeroRotator);
+
+			if (weapon) // 안전장치: 생성 확인
+			{
+				weapon->AttachToComponent(
+					OwnerPlayer->GetMesh(),
+					FAttachmentTransformRules::KeepWorldTransform,
+					FName("root"));
+				weapon->SetWeaponOwner(OwnerPlayer.Get());
+				weapon->WeaponActivate(false);
+
+				WeaponInstances.Add(pair.Key, weapon);
+			}
+		}
+	}
+}
+
 
 

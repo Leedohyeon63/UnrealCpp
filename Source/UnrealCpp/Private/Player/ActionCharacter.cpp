@@ -105,6 +105,8 @@ void AActionCharacter::AddItem_Implementation(EItemCode Code)
 {
 	const UEnum* EnumPtr = StaticEnum<EItemCode>();
 	UE_LOG(LogTemp, Log, TEXT("아이템 추가 : %s"), *EnumPtr->GetDisplayNameTextByValue(static_cast<int8>(Code)).ToString());
+
+	EquipWeapon(Code);
 }
 
 
@@ -115,6 +117,19 @@ void AActionCharacter::OnAttackEnable(bool bEnable)
 		CurrentWeapon->AttackEnable(bEnable);
 	}
 	
+}
+
+void AActionCharacter::EquipWeapon(EItemCode WeaponCode)
+{
+	if (CurrentWeapon.IsValid())
+	{
+		// 장비하고 있던 무기는 해제
+		CurrentWeapon->WeaponActivate(false);
+	}
+
+	// WeaponCode에 해당하는 무기 장비
+	CurrentWeapon = WeaponManager->GetEquippedWeapon(WeaponCode);
+	CurrentWeapon->WeaponActivate(true);
 }
 
 void AActionCharacter::OnCurrentWeaponThrowaway()

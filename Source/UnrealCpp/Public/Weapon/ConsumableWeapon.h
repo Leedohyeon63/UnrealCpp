@@ -16,7 +16,7 @@ class UNREALCPP_API AConsumableWeapon : public AWeaponActor
 	GENERATED_BODY()
 public:
 	virtual void OnAttack() override;
-	virtual void OnWeaponPickuped(AActionCharacter* InOwner) override;
+	virtual void OnWeaponPickuped() override;
 	virtual bool CanAttack() override { return CurrentUseCount > 0; }
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Data")

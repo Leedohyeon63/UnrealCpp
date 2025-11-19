@@ -8,6 +8,8 @@
 #include "Data/WeaponDataAsset.h"
 #include "WeaponManager.generated.h"
 
+class AWeaponActor;
+class AUsedWeapon;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class UNREALCPP_API UWeaponManager : public UActorComponent
@@ -18,11 +20,25 @@ public:
 	// Sets default values for this component's properties
 	UWeaponManager();
 
+	AWeaponActor* GetEquippedWeapon(EItemCode InType) const;
+	TSubclassOf<AUsedWeapon> GetUsedWeaponClass(EItemCode InType) const;
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
-	void ValidateWeaponDataBase();
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Database")
 	TMap<EItemCode, TObjectPtr<UWeaponDataAsset>> WeaponDatabase;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon Instance")
+	TMap<EItemCode, TObjectPtr<AWeaponActor>> WeaponInstances;
+
+private:
+	void ValidateWeaponDataBase();
+
+	void SpawnWeaponInstances();
+
+private:
+	UPROPERTY()
+	TWeakObjectPtr<class AActionCharacter> OwnerPlayer = nullptr;
 };

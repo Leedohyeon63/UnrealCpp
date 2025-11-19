@@ -43,6 +43,9 @@ public:
 	UResourceComponent* GetResourceComponent() { return Resource; }
 	UStatusComponent* GetStatusComponent() { return Status; }
 
+	UFUNCTION(BlueprintCallable, Category = "Weapon")
+	void EquipWeapon(EItemCode WeaponCode);
+
 	inline void SetSectionJumpNotify(class UAnimNotifyState_SectionJump* InSectionjumpNotify) 
 	{
 		SectionJumpNotify = InSectionjumpNotify;

@@ -33,15 +33,20 @@ public:
 	virtual	void PostInitializeComponents() override;
 
 	UFUNCTION(BlueprintCallable)
+	void WeaponActivate(bool bActivate);
+
+	UFUNCTION(BlueprintCallable)
 	virtual void OnAttack(){};
 
 	UFUNCTION(BlueprintCallable)
-	virtual void OnWeaponPickuped(AActionCharacter* InOwener);
+	virtual void OnWeaponPickuped();
 	//이 무기로 공격 가능한지 확인
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	virtual bool CanAttack() { return true; }
 
 	inline EItemCode GetItemCode() { return WeaponID; }
+
+	inline void SetWeaponOwner(AActionCharacter* InOwner) { WeaponOwner = InOwner; }
 protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
