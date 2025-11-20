@@ -6,7 +6,6 @@
 #include "GameFramework/Actor.h"
 #include "Player/ActionCharacter.h"
 #include "Common/CommonEnum.h"
-#include "NiagaraComponent.h"
 #include "WeaponActor.generated.h"
 
 UCLASS()
@@ -51,8 +50,6 @@ public:
 
 	inline void SetWeaponOwner(AActionCharacter* InOwner) { WeaponOwner = InOwner; }
 protected:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	TObjectPtr<UNiagaraComponent> SlashEffect = nullptr;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<USkeletalMeshComponent> WeaponMesh = nullptr;

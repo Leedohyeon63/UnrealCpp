@@ -4,26 +4,25 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "NiagaraTestActor.generated.h"
+#include "TestTrapActor.generated.h"
 
 UCLASS()
-class UNREALCPP_API ANiagaraTestActor : public AActor
+class UNREALCPP_API ATestTrapActor : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ANiagaraTestActor();
-
-	UFUNCTION(BlueprintCallable, Category = "Test")
-	void TestColorChange(const FLinearColor& Color);
+	ATestTrapActor();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UStaticMeshComponent> Root = nullptr;

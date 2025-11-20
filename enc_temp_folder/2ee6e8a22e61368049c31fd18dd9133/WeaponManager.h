@@ -29,7 +29,6 @@ protected:
 	virtual void BeginPlay() override;
 
 protected:
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Database")
 	TMap<EItemCode, TObjectPtr<UWeaponDataAsset>> WeaponDatabase;
 

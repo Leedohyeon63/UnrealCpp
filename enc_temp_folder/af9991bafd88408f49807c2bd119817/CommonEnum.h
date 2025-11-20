@@ -19,7 +19,6 @@ enum class EItemCode : uint8
 
 enum class DamgeType : uint8
 {
-	Fire UMETA(DisplayName = "화염데미지"),
-	Ice UMETA(DisplayName = "얼음데미지"),
-	Spark UMETA(DisplayName = "전기데미지"),
+
+
 };
