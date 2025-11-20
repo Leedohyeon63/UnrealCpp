@@ -25,7 +25,7 @@ AWeaponActor::AWeaponActor()
 	WeaponCollision->SetCollisionProfileName(TEXT("OverlapOnlyPawn"));
 
 	SlashEffect = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Effect"));
-	SlashEffect->SetupAttachment(root);
+	SlashEffect->SetupAttachment(WeaponMesh);
 }
 
 // Called when the game starts or when spawned
