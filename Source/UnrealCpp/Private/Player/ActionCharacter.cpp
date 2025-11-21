@@ -11,6 +11,7 @@
 #include "Weapon/ConsumableWeapon.h"
 #include "Weapon/WeaponActor.h"
 #include "Item/IEquipable.h"
+
 // Sets default values
 AActionCharacter::AActionCharacter()
 {
@@ -38,9 +39,6 @@ AActionCharacter::AActionCharacter()
 	Status = CreateDefaultSubobject<UStatusComponent>(TEXT("PlayerStatus"));
 
 	WeaponManager = CreateDefaultSubobject<UWeaponManager>(TEXT("WeaponManager"));
-
-
-
 }
 
 // Called when the game starts or when spawned

@@ -44,6 +44,7 @@ public:
 
 	void OnAreaColisionEnable(bool bEnable);
 
+
 	UResourceComponent* GetResourceComponent() { return Resource; }
 	UStatusComponent* GetStatusComponent() { return Status; }
 
@@ -65,6 +66,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void OnCurrentWeaponThrowaway();
+
 protected:
 	void OnMoveInput(const FInputActionValue& Invalue);
 	void OnRollInput(const FInputActionValue& Invalue);
@@ -90,6 +92,10 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Player|Camera")
 	TObjectPtr<UCameraComponent> PlayerCamera = nullptr;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Player|Camera")
+	TObjectPtr<UCameraShakeBase> PlayerCameraShake = nullptr;
+
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Player|Resource")
 	TObjectPtr<UResourceComponent> Resource = nullptr;

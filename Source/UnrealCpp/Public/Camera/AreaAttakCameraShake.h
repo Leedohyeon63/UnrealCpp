@@ -3,15 +3,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Animation/AnimNotifies/AnimNotify.h"
-#include "AnimNotify_WeaponTrail.generated.h"
+#include "Camera/CameraShakeBase.h"
+#include "AreaAttakCameraShake.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class UNREALCPP_API UAnimNotify_WeaponTrail : public UAnimNotify
+class UNREALCPP_API UAreaAttakCameraShake : public UCameraShakeBase
 {
 	GENERATED_BODY()
-
+	
 };
