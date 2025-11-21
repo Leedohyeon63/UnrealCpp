@@ -40,6 +40,10 @@ public:
 
 	void OnAttackEnable(bool bEnable);
 
+	void OnWeaponTrailEnable(bool bEnable);
+
+	void OnAreaColisionEnable(bool bEnable);
+
 	UResourceComponent* GetResourceComponent() { return Resource; }
 	UStatusComponent* GetStatusComponent() { return Status; }
 

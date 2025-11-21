@@ -24,8 +24,14 @@ AWeaponActor::AWeaponActor()
 	WeaponCollision->SetupAttachment(WeaponMesh);
 	WeaponCollision->SetCollisionProfileName(TEXT("OverlapOnlyPawn"));
 
+	BaseWeaponCollisionWidth = WeaponCollision->GetScaledCapsuleRadius();
+	BaseWeaponCollisionHeight = WeaponCollision->GetUnscaledCapsuleHalfHeight();
+
 	SlashEffect = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Effect"));
 	SlashEffect->SetupAttachment(WeaponMesh);
+
+	AreaAttackEffect = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Effect"));
+	AreaAttackEffect->SetupAttachment(WeaponMesh);
 }
 
 // Called when the game starts or when spawned
@@ -75,6 +81,33 @@ void AWeaponActor::AttackEnable(bool bEnable)
 	}
 }
 
+void AWeaponActor::TrailEnable(bool bEnable)
+{
+	if (bEnable)
+	{
+		SlashEffect->Activate(true);
+	}
+	else
+	{
+		SlashEffect->Deactivate();
+	}
+}
+
+void AWeaponActor::BigAreaAttack(bool bEnable)
+{
+	if (bEnable)
+	{
+		WeaponCollision->SetCapsuleRadius(300.0f, true);
+		WeaponCollision->SetCapsuleHalfHeight(300.0f, true);
+		UE_LOG(LogTemp, Log, TEXT("범위공격 : %.0f"), WeaponCollision->GetScaledCapsuleRadius());
+	}
+	else
+	{
+		WeaponCollision->SetCapsuleRadius(BaseWeaponCollisionWidth, true);
+		WeaponCollision->SetCapsuleHalfHeight(BaseWeaponCollisionHeight, true);
+	}
+}
+
 void AWeaponActor::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
@@ -110,6 +143,8 @@ void AWeaponActor::WeaponActivate(bool bActivate)
 		OnWeaponDeactivate();
 	}
 
+	TrailEnable(false);
+	AttackEnable(false);
 	// 비지빌리티 - O
 	// 충돌 - X
 	// 액터의 틱 - X

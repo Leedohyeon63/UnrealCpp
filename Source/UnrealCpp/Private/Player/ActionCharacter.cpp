@@ -40,6 +40,7 @@ AActionCharacter::AActionCharacter()
 	WeaponManager = CreateDefaultSubobject<UWeaponManager>(TEXT("WeaponManager"));
 
 
+
 }
 
 // Called when the game starts or when spawned
@@ -142,6 +143,22 @@ void AActionCharacter::EquipWeapon(EItemCode WeaponCode)
 	// WeaponCode에 해당하는 무기 장비
 	CurrentWeapon = WeaponManager->GetEquippedWeapon(WeaponCode);
 	CurrentWeapon->WeaponActivate(true);
+}
+
+void AActionCharacter::OnWeaponTrailEnable(bool bEnable)
+{
+	if (CurrentWeapon.IsValid())
+	{
+		CurrentWeapon->TrailEnable(bEnable);
+	}
+}
+
+void AActionCharacter::OnAreaColisionEnable(bool bEnable)
+{
+	if (CurrentWeapon.IsValid())
+	{
+		CurrentWeapon->BigAreaAttack(bEnable);
+	}
 }
 
 void AActionCharacter::OnCurrentWeaponThrowaway()

@@ -33,6 +33,13 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void AttackEnable(bool bEnable);
 
+	UFUNCTION(BlueprintCallable)
+	void TrailEnable(bool bEnable);
+
+	UFUNCTION(BlueprintCallable)
+	void BigAreaAttack(bool bEnable);
+
+
 	virtual	void PostInitializeComponents() override;
 
 	UFUNCTION(BlueprintCallable)
@@ -55,6 +62,9 @@ protected:
 	TObjectPtr<UNiagaraComponent> SlashEffect = nullptr;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	TObjectPtr<UNiagaraComponent> AreaAttackEffect = nullptr;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<USkeletalMeshComponent> WeaponMesh = nullptr;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
@@ -70,4 +80,7 @@ protected:
 	EItemCode WeaponID = EItemCode::BasicWeapon;
 private:
 	TWeakObjectPtr<AActionCharacter> WeaponOwner = nullptr;
+
+	float BaseWeaponCollisionWidth = 0.0f;
+	float BaseWeaponCollisionHeight = 0.0f;
 };
