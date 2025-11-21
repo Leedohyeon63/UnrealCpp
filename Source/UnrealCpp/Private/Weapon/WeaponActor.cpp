@@ -30,7 +30,7 @@ AWeaponActor::AWeaponActor()
 	SlashEffect = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Effect"));
 	SlashEffect->SetupAttachment(WeaponMesh);
 
-	AreaAttackEffect = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Effect"));
+	AreaAttackEffect = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Particle"));
 	AreaAttackEffect->SetupAttachment(WeaponMesh);
 }
 
@@ -99,12 +99,14 @@ void AWeaponActor::BigAreaAttack(bool bEnable)
 	{
 		WeaponCollision->SetCapsuleRadius(300.0f, true);
 		WeaponCollision->SetCapsuleHalfHeight(300.0f, true);
+		AreaAttackEffect->Activate(true);
 		UE_LOG(LogTemp, Log, TEXT("범위공격 : %.0f"), WeaponCollision->GetScaledCapsuleRadius());
 	}
 	else
 	{
 		WeaponCollision->SetCapsuleRadius(BaseWeaponCollisionWidth, true);
 		WeaponCollision->SetCapsuleHalfHeight(BaseWeaponCollisionHeight, true);
+		AreaAttackEffect->Deactivate();
 	}
 }
 
@@ -145,6 +147,7 @@ void AWeaponActor::WeaponActivate(bool bActivate)
 
 	TrailEnable(false);
 	AttackEnable(false);
+	AreaAttackEffect->Deactivate();
 	// 비지빌리티 - O
 	// 충돌 - X
 	// 액터의 틱 - X
