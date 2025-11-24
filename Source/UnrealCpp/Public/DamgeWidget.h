@@ -25,5 +25,5 @@ protected:
 	TObjectPtr<class UTextBlock> DamageText = nullptr;
 
 	UPROPERTY(Transient, meta = (BindWidgetAnim))	// Transient : 런타임에 임시로 생성된다고 명시, BindWidgetAnim : 애니메이션 바인딩
-		TObjectPtr<UWidgetAnimation> PopupAnimation = nullptr;
+	TObjectPtr<UWidgetAnimation> PopupAnimation = nullptr;
 };

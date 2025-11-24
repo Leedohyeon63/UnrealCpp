@@ -15,9 +15,6 @@ ADamagePopupActor::ADamagePopupActor()
 	SetRootComponent(DamageWidgetComponent);
 
 	DamageWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen);
-	// 항상 카메라에 보이도록 스크린 스페이스 기준으로 설정
-
-
 	DamageWidgetComponent->SetDrawAtDesiredSize(true);
 }
 
@@ -38,6 +35,8 @@ void ADamagePopupActor::PopupActivate(float Damage)
 		LifeTime,
 		false
 	);
+
+
 }
 
 void ADamagePopupActor::PopupDeactivate()

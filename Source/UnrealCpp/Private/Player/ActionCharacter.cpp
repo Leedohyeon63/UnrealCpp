@@ -140,7 +140,12 @@ void AActionCharacter::EquipWeapon(EItemCode WeaponCode)
 
 	// WeaponCode에 해당하는 무기 장비
 	CurrentWeapon = WeaponManager->GetEquippedWeapon(WeaponCode);
-	CurrentWeapon->WeaponActivate(true);
+	//CurrentWeapon->WeaponActivate(true);
+	if (CurrentWeapon.IsValid())
+	{
+		CurrentWeapon->SetWeaponOwner(this); // <--- 이 줄을 추가하세요!
+		CurrentWeapon->WeaponActivate(true);
+	}
 }
 
 void AActionCharacter::OnWeaponTrailEnable(bool bEnable)
