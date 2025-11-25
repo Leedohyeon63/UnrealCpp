@@ -16,6 +16,12 @@ void UDamagePopupSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	}
 }
 
+void UDamagePopupSubsystem::Deinitialize()
+{
+	UE_LOG(LogTemp, Log, TEXT("UEnemyTrackingSubsystem::Deinitialize"));
+	Super::Deinitialize();
+}
+
 void UDamagePopupSubsystem::ShowDamagePopup(float Damage, const FVector& Location)
 {
 	ADamagePopupActor* selected = nullptr;

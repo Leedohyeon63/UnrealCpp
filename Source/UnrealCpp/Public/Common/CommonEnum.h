@@ -14,6 +14,7 @@ enum class EItemCode : uint8
 	BasicWeapon UMETA(DisplayName = "기본무기"),
 	DragonSword UMETA(DisplayName = "드래곤소드"),
 	HeroSword UMETA(DisplayName = "히어로소드"),
+	HealthPotion UMETA(DisplayName = "물약"),
 	
 };
 

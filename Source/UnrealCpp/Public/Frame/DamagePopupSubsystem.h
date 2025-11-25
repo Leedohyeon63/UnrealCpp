@@ -16,6 +16,7 @@ class UNREALCPP_API UDamagePopupSubsystem : public UWorldSubsystem
 
 public:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+	virtual void Deinitialize() override;
 
 	UFUNCTION(BlueprintCallable, Category = "Damage Popup Pool")
 	void ShowDamagePopup(float Damage, const FVector& Location);

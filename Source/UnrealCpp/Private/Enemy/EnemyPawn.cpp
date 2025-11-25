@@ -134,7 +134,6 @@ void AEnemyPawn::DropItems()
 		//			GetActorRotation());
 		//	}
 		//}
-
 		float TotalWeight = 0.0f;
 		for (auto& elenment : RowMap)
 		{
@@ -158,16 +157,6 @@ void AEnemyPawn::DropItems()
 				break;
 			}
 		}
-		if (Pickup)
-		{
-			UE_LOG(LogTemp, Log, TEXT("드랍 성공"));
-		}
-		else
-		{
-			UE_LOG(LogTemp, Log, TEXT("드랍 실패"));
-
-		}
-
 	}
 }
 
