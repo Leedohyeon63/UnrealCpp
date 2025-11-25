@@ -6,7 +6,8 @@
 #include "Enemy/DamagePopupActor.h"
 #include "Frame/DamagePopupSubsystem.h"
 #include "Frame/EnemyTrackingSubsystem.h"
-
+#include "Data/DropItemData_TableRow.h"
+#include "Item/PickUp.h"
 // Sets default values
 AEnemyPawn::AEnemyPawn()
 {
@@ -117,6 +118,57 @@ void AEnemyPawn::OnTakeDamage(AActor* DamagedActor, float Damage, const UDamageT
 
 void AEnemyPawn::DropItems()
 {
+	if (DropItemTable)
+	{
+		TMap<FName, uint8*> RowMap = DropItemTable->GetRowMap();
+		APickUp* Pickup = nullptr;
+		//중복으로 당첨 가능
+		//for (auto& elenment : RowMap)
+		//{
+		//	FDropItemData_TableRow* Row = (FDropItemData_TableRow*)elenment.Value;
+		//	if (FMath::FRand() < Row->DropRate)
+		//	{
+		//		GetWorld()->SpawnActor<APickUp>(
+		//			Row->DropItemClass,
+		//			GetActorLocation() + FVector::UpVector * 200.0f,
+		//			GetActorRotation());
+		//	}
+		//}
+
+		float TotalWeight = 0.0f;
+		for (auto& elenment : RowMap)
+		{
+			FDropItemData_TableRow* Row = (FDropItemData_TableRow*)elenment.Value;
+			TotalWeight += Row->DropRate;
+
+		}
+		float RandomSelect = FMath::FRandRange(0, TotalWeight);
+		float CurrentWeight = 0.0f;
+		for (auto& elenment : RowMap)
+		{
+			FDropItemData_TableRow* Row = (FDropItemData_TableRow*)elenment.Value;
+			CurrentWeight += Row->DropRate;
+			if (RandomSelect < CurrentWeight)
+			{
+				//당첨 -> 스폰처리
+				GetWorld()->SpawnActor<APickUp>(
+				Row->DropItemClass,
+				GetActorLocation() + FVector::UpVector * 200.0f,
+				GetActorRotation());
+				break;
+			}
+		}
+		if (Pickup)
+		{
+			UE_LOG(LogTemp, Log, TEXT("드랍 성공"));
+		}
+		else
+		{
+			UE_LOG(LogTemp, Log, TEXT("드랍 실패"));
+
+		}
+
+	}
 }
 
 void AEnemyPawn::Ondie()
