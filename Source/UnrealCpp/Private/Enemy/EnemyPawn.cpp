@@ -65,51 +65,53 @@ void AEnemyPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 void AEnemyPawn::OnTakeDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
 {
 	//GEngine->AddOnScreenDebugMessage()
-	UE_LOG(LogTemp, Log, TEXT("Damage : %.1f"), Damage);
+	//GEngine->AddOnScreenDebugMessage()
 	if (Resource->IsAlive())
 	{
 		if (!bInvinciable || !FMath::IsNearlyEqual(LastDamage, Damage))
 		{
+			UE_LOG(LogTemp, Log, TEXT("Damage : %.1f"), Damage);
+
+			Resource->AddHP(-Damage);
+			//ADamagePopupActor* actor = GetWorld()->SpawnActor<ADamagePopupActor>(
+			//	DamagePopupClass, PopupLocation->GetComponentToWorld());
+			//if (actor)
+			//{
+			//	actor->PopupActivate(Damage);
+			//}
+
 			UDamagePopupSubsystem* popupSystem = GetWorld()->GetSubsystem<UDamagePopupSubsystem>();
 			popupSystem->ShowDamagePopup(Damage, PopupLocation->GetComponentLocation());
 
-			if (Resource)
+			if (Resource->IsAlive())
 			{
-				Resource->AddHP(-Damage);
+				// 한번에 연속해서 데미지 입는것 방지
+				bInvinciable = true;
+				LastDamage = Damage;
+
+				FTimerDelegate resetInvincibleDelegate = FTimerDelegate::CreateWeakLambda(
+					this,
+					[this]()
+					{
+						bInvinciable = false;
+					});	// this가 파괴되면 람다는 더 이상 실행되지 않는다.
+
+				GetWorldTimerManager().ClearTimer(InvinciableTimeer);
+				GetWorldTimerManager().SetTimer(
+					InvinciableTimeer,
+					resetInvincibleDelegate,
+					0.1f, false);
 			}
 			else
 			{
-				UE_LOG(LogTemp, Warning, TEXT("%s: Resource component is null when taking damage"), *GetName());
+				Ondie();
 			}
-		}
-		else
-		{
-			bInvinciable = true;
-			LastDamage = Damage;
-
-			FTimerDelegate ResetDelegate = FTimerDelegate::CreateWeakLambda(this, [this]() {
-				bInvinciable = false;
-				});
-
-			GetWorldTimerManager().ClearTimer(InvinciableTimeer);
-			GetWorldTimerManager().SetTimer(
-				InvinciableTimeer,
-				ResetDelegate,
-				0.2f, false
-			); //this가 파괴되면 람다는 더 실행되지 않는다.
 		}
 	}
 	else
 	{
-		Ondie();
-		//UE_LOG(LogTemp, Log, TEXT("이미죽음"));
+		UE_LOG(LogTemp, Log, TEXT("이 적은 이미 죽어있다."));
 	}
-	//ADamagePopupActor* actor = GetWorld()->SpawnActor<ADamagePopupActor>(
-	//	DamagePopupClass, PopupLocation->GetComponentToWorld());
-	//if (actor)
-	//{
-	//	actor->PopupActivate(Damage);
-	//}
 
 }
 
