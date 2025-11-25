@@ -18,7 +18,8 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason);
+	
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -39,4 +40,13 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Popup")
 	TSubclassOf<class ADamagePopupActor> DamagePopupClass = nullptr;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	TObjectPtr<class UResourceComponent> Resource = nullptr;
+private:
+	bool bInvinciable = false;
+	FTimerHandle InvinciableTimeer;
+	float LastDamage = 0.0f;
+
+	void Ondie();
 };
