@@ -36,6 +36,9 @@ private:
 	void OnTakeDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType,
 		class AController* InstigatedBy, AActor* DamageCauser);
 
+	UFUNCTION(BlueprintCallable)
+	void DropItemProbabilityTest();
+
 	void DropItems();
 	void Ondie();
 protected:

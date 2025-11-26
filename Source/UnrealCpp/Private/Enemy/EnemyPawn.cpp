@@ -137,9 +137,15 @@ void AEnemyPawn::DropItems()
 
 			pickup = GetWorld()->GetSubsystem<UPickupFactorySubsystem>()->SpawnPickup(
 				row->PickupCode,
-				GetActorLocation() + FVector::UpVector * 200.0f,
-				GetActorRotation()
+				PopupLocation->GetComponentLocation() + FVector::UpVector * 200.0f,
+				GetActorRotation() 
 			);
+			FVector LaunchVelocity = FVector::UpVector * 500.0f;
+			LaunchVelocity = LaunchVelocity.RotateAngleAxis(FMath::FRandRange(-15.0f, 15.0f), FVector::RightVector);
+			LaunchVelocity = LaunchVelocity.RotateAngleAxis(FMath::FRandRange(0.0f, 360.0f), FVector::UpVector);
+			DrawDebugLine(GetWorld(), PopupLocation->GetComponentLocation(), 
+				PopupLocation->GetComponentLocation()+ LaunchVelocity, FColor::Red, false, 3.0f);
+			pickup->AddImpulse(LaunchVelocity);
 		}
 		if (pickup)
 		{
@@ -172,6 +178,47 @@ void AEnemyPawn::DropItems()
 		//		break;
 		//	}
 		//}
+}
+
+void AEnemyPawn::DropItemProbabilityTest()
+{
+	APickUp* pickup = nullptr;
+	int32 Countaxe = 0;
+	int32 Countdsword = 0;
+	int32 Counthsword = 0;
+	int32 total = 0;
+	TMap<FName, uint8*> RowMap = DropItemTable->GetRowMap();
+
+	for (size_t i = 0; i < 1000000; i++)
+	{
+		for (const auto& element : RowMap)
+		{
+			pickup = nullptr;
+			FDropItemData_TableRow2* row = (FDropItemData_TableRow2*)element.Value;
+			if (FMath::FRand() <= row->DropRate)
+			{
+				if (row->PickupCode==EItemCode::HeroSword)
+				{
+					Countaxe++;
+					total++;
+				}
+				else if (row->PickupCode == EItemCode::BasicWeapon)
+				{
+					Countdsword++;
+					total++;
+				}
+				else if (row->PickupCode == EItemCode::DragonSword)
+				{
+					Counthsword++;
+					total++;
+				}
+			}
+		}
+	}
+
+	UE_LOG(LogTemp, Log, TEXT("기본무기 : %d, 드래곤소드 : %d, 히어로소드 : %d 시행횟수 1000000, 드랍확률 : %f"), 
+		Countaxe, Countdsword, Counthsword, total/ 1000000.0f);
+
 }
 
 void AEnemyPawn::Ondie()
