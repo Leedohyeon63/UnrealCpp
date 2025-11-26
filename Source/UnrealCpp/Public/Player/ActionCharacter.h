@@ -49,7 +49,7 @@ public:
 	UStatusComponent* GetStatusComponent() { return Status; }
 
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
-	void EquipWeapon(EItemCode WeaponCode);
+	void EquipWeapon(EWeaponCode WeaponCode);
 
 	inline void SetSectionJumpNotify(class UAnimNotifyState_SectionJump* InSectionjumpNotify) 
 	{
@@ -58,8 +58,8 @@ public:
 
 	}
 
-	UFUNCTION(BlueprintCallable)
-	void OnWeaponThrowaway();
+	//UFUNCTION(BlueprintCallable)
+	//void OnWeaponThrowaway(EItemCode WeaponCode);
 
 	//UFUNCTION(BlueprintCallable, Category = "Weapon")
 	//void DropWeapon(EItemCode WeaponCode);
@@ -174,6 +174,6 @@ private:
 private:
 	void SectionJumpForCombo();
 	void SpendRunstamina(float DeltaTime);
-	void DropCurrentWeapon(EItemCode WeaponCode);
-	void DropWeapon(EItemCode WeaponCode);
+	void DropCurrentWeapon(EWeaponCode WeaponCode);
+	void DropWeapon(EWeaponCode WeaponCode);
 };

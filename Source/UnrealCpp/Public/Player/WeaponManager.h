@@ -21,9 +21,18 @@ public:
 	// Sets default values for this component's properties
 	UWeaponManager();
 
-	AWeaponActor* GetEquippedWeapon(EItemCode InType) const;
-	TSubclassOf<AUsedWeapon> GetUsedWeaponClass(EItemCode InType) const;
-	TSubclassOf<APickUp> GetPickupWeaponClass(EItemCode InType) const;
+	AWeaponActor* GetEquippedWeapon(EWeaponCode InType) const;
+	TSubclassOf<AUsedWeapon> GetUsedWeaponClass(EWeaponCode InType) const;
+	TSubclassOf<APickUp> GetPickupWeaponClass(EWeaponCode InType) const;
+
+	inline EItemCode GetItemCode(EWeaponCode Code) const
+	{
+		return WeaponCodeToItemCode[Code];
+	};
+	inline EWeaponCode GetWeaponCode(EItemCode Code) const
+	{
+		return ItemCodeToWeaponCode[Code];
+	};
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -31,10 +40,10 @@ protected:
 protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Database")
-	TMap<EItemCode, TObjectPtr<UWeaponDataAsset>> WeaponDatabase;
+	TMap<EWeaponCode, TObjectPtr<UWeaponDataAsset>> WeaponDatabase;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon Instance")
-	TMap<EItemCode, TObjectPtr<AWeaponActor>> WeaponInstances;
+	TMap<EWeaponCode, TObjectPtr<AWeaponActor>> WeaponInstances;
 
 private:
 	void ValidateWeaponDataBase();
@@ -44,4 +53,8 @@ private:
 private:
 	UPROPERTY()
 	TWeakObjectPtr<class AActionCharacter> OwnerPlayer = nullptr;
+
+
+	TMap<EItemCode, EWeaponCode> ItemCodeToWeaponCode;
+	TMap<EWeaponCode, EItemCode> WeaponCodeToItemCode;
 };

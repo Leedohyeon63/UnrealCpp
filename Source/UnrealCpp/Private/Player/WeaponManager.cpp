@@ -14,8 +14,44 @@ UWeaponManager::UWeaponManager()
 	PrimaryComponentTick.bCanEverTick = false;
 
 	// ...
+	WeaponCodeToItemCode.Empty();
+	WeaponCodeToItemCode.Add(EWeaponCode::BasicWeapon, EItemCode::BasicWeapon);
+	WeaponCodeToItemCode.Add(EWeaponCode::DragonSword, EItemCode::DragonSword);
+	WeaponCodeToItemCode.Add(EWeaponCode::HeroSword, EItemCode::HeroSword);
+	ItemCodeToWeaponCode.Empty();
+	ItemCodeToWeaponCode.Add(EItemCode::BasicWeapon, EWeaponCode::BasicWeapon);
+	ItemCodeToWeaponCode.Add(EItemCode::DragonSword, EWeaponCode::DragonSword);
+	ItemCodeToWeaponCode.Add(EItemCode::HeroSword, EWeaponCode::HeroSword);
 }
 
+AWeaponActor* UWeaponManager::GetEquippedWeapon(EWeaponCode InType) const
+{
+	//if (const TObjectPtr<AWeaponActor>* weapon = WeaponInstances.Find(InType))
+	//{
+	//	return *weapon;
+	//}
+
+	AWeaponActor* weapon = nullptr;
+	if (WeaponInstances.Contains(InType))
+	{
+		weapon = WeaponInstances[InType];
+	}
+
+	return weapon;
+}
+
+TSubclassOf<AUsedWeapon> UWeaponManager::GetUsedWeaponClass(EWeaponCode InType) const
+{
+	const UWeaponDataAsset* dataAsset = *WeaponDatabase.Find(InType);
+	return dataAsset->UsedWaeponClass;
+}
+
+
+TSubclassOf<APickUp> UWeaponManager::GetPickupWeaponClass(EWeaponCode InType) const
+{
+	const UWeaponDataAsset* dataAsset = *WeaponDatabase.Find(InType);
+	return dataAsset->PickupWeaponClass;
+}
 
 // Called when the game starts
 void UWeaponManager::BeginPlay()
@@ -28,13 +64,7 @@ void UWeaponManager::BeginPlay()
 	ValidateWeaponDataBase();
 	SpawnWeaponInstances();
 
-	OwnerPlayer->EquipWeapon(EItemCode::BasicWeapon);
-}
-
-TSubclassOf<APickUp> UWeaponManager::GetPickupWeaponClass(EItemCode InType) const
-{
-	const UWeaponDataAsset* dataAsset = *WeaponDatabase.Find(InType);
-	return dataAsset->PickupWeaponClass;
+	OwnerPlayer->EquipWeapon(EWeaponCode::BasicWeapon);
 }
 
 
@@ -64,27 +94,6 @@ void UWeaponManager::ValidateWeaponDataBase()
 	}
 }
 
-AWeaponActor* UWeaponManager::GetEquippedWeapon(EItemCode InType) const
-{
-	//if (const TObjectPtr<AWeaponActor>* weapon = WeaponInstances.Find(InType))
-	//{
-	//	return *weapon;
-	//}
-
-	AWeaponActor* weapon = nullptr;
-	if (WeaponInstances.Contains(InType))
-	{
-		weapon = WeaponInstances[InType];
-	}
-
-	return weapon;
-}
-
-TSubclassOf<AUsedWeapon> UWeaponManager::GetUsedWeaponClass(EItemCode InType) const
-{
-	const UWeaponDataAsset* dataAsset = *WeaponDatabase.Find(InType);
-	return dataAsset->UsedWaeponClass;
-}
 
 
 void UWeaponManager::SpawnWeaponInstances()

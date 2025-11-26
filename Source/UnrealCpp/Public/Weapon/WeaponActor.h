@@ -54,7 +54,7 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	virtual bool CanAttack() { return true; }
 
-	inline EItemCode GetItemCode() { return WeaponID; }
+	inline EWeaponCode GetItemCode() { return WeaponID; }
 
 	inline void SetWeaponOwner(AActionCharacter* InOwner) { WeaponOwner = InOwner; }
 protected:
@@ -77,7 +77,7 @@ protected:
 	TSubclassOf<UDamageType> DamageType = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Data")
-	EItemCode WeaponID = EItemCode::BasicWeapon;
+	EWeaponCode WeaponID = EWeaponCode::BasicWeapon;
 private:
 	TWeakObjectPtr<AActionCharacter> WeaponOwner = nullptr;
 

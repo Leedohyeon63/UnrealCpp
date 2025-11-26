@@ -18,6 +18,7 @@ enum class EItemCode : uint8
 	
 };
 
+UENUM(BlueprintType)
 enum class DamgeType : uint8
 {
 	Fire UMETA(DisplayName = "화염데미지"),
@@ -25,6 +26,7 @@ enum class DamgeType : uint8
 	Spark UMETA(DisplayName = "전기데미지"),
 };
 
+UENUM(BlueprintType)
 enum class EWeaponCode : uint8
 {
 	BasicWeapon UMETA(DisplayName = "기본무기"),
