@@ -19,9 +19,13 @@ public:
 	virtual void Deinitialize() override;
 
 	UFUNCTION(BlueprintCallable, Category = "Pickup Factory")
-	APickUp* SpawnPickup(EItemCode ItemCode, FVector Location, FRotator Rotation = FRotator::ZeroRotator);
+	APickUp* SpawnPickup(EItemCode ItemCode, 
+		FVector Location = FVector::ZeroVector, 
+		FRotator Rotation = FRotator::ZeroRotator);
 protected:
+	void LoadPickupClassesMap();
+
 	UPROPERTY()
-	TMap<EItemCode, TSubclassOf<APickUp>> PickupClass;
+	TMap<EItemCode, TSubclassOf<APickUp>> PickupClasses;
 
 };

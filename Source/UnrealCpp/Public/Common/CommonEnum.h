@@ -24,3 +24,12 @@ enum class DamgeType : uint8
 	Ice UMETA(DisplayName = "얼음데미지"),
 	Spark UMETA(DisplayName = "전기데미지"),
 };
+
+enum class EWeaponCode : uint8
+{
+	BasicWeapon UMETA(DisplayName = "기본무기"),
+	DragonSword UMETA(DisplayName = "드래곤소드"),
+	HeroSword UMETA(DisplayName = "히어로소드"),
+//	HealthPotion UMETA(DisplayName = "물약"),
+
+};

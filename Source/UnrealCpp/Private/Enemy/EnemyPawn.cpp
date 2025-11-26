@@ -6,8 +6,10 @@
 #include "Enemy/DamagePopupActor.h"
 #include "Frame/DamagePopupSubsystem.h"
 #include "Frame/EnemyTrackingSubsystem.h"
+#include "Frame/PickupFactorySubsystem.h"
 #include "Data/DropItemData_TableRow.h"
 #include "Item/PickUp.h"
+
 // Sets default values
 AEnemyPawn::AEnemyPawn()
 {
@@ -118,46 +120,58 @@ void AEnemyPawn::OnTakeDamage(AActor* DamagedActor, float Damage, const UDamageT
 
 void AEnemyPawn::DropItems()
 {
-	if (DropItemTable)
+	APickUp* pickup = nullptr;
+	TMap<FName, uint8*> RowMap = DropItemTable->GetRowMap();
+
+	// 중복으로 당첨 가능(아무것도 안나올 수도 있음)
+	for (const auto& element : RowMap)
 	{
-		TMap<FName, uint8*> RowMap = DropItemTable->GetRowMap();
-		APickUp* Pickup = nullptr;
-		//중복으로 당첨 가능
+		pickup = nullptr;
+		FDropItemData_TableRow2* row = (FDropItemData_TableRow2*)element.Value;
+		if (FMath::FRand() <= row->DropRate)
+		{
+			//pickup = GetWorld()->SpawnActor<APickup>(
+			//	row->DropItemClass,
+			//	GetActorLocation() + FVector::UpVector * 200.0f,
+			//	GetActorRotation());
+
+			pickup = GetWorld()->GetSubsystem<UPickupFactorySubsystem>()->SpawnPickup(
+				row->PickupCode,
+				GetActorLocation() + FVector::UpVector * 200.0f,
+				GetActorRotation()
+			);
+		}
+		if (pickup)
+		{
+			UE_LOG(LogTemp, Log, TEXT("Drop Success : %s"), *pickup->GetName());
+		}
+		else
+		{
+			UE_LOG(LogTemp, Log, TEXT("Drop empty"));
+		}
+	}
+		//float TotalWeight = 0.0f;
 		//for (auto& elenment : RowMap)
 		//{
 		//	FDropItemData_TableRow* Row = (FDropItemData_TableRow*)elenment.Value;
-		//	if (FMath::FRand() < Row->DropRate)
+		//	TotalWeight += Row->DropRate;
+		//}
+		//float RandomSelect = FMath::FRandRange(0, TotalWeight);
+		//float CurrentWeight = 0.0f;
+		//for (auto& elenment : RowMap)
+		//{
+		//	FDropItemData_TableRow* Row = (FDropItemData_TableRow*)elenment.Value;
+		//	CurrentWeight += Row->DropRate;
+		//	if (RandomSelect < CurrentWeight)
 		//	{
+		//		//당첨 -> 스폰처리
 		//		GetWorld()->SpawnActor<APickUp>(
-		//			Row->DropItemClass,
-		//			GetActorLocation() + FVector::UpVector * 200.0f,
-		//			GetActorRotation());
+		//		Row->DropItemClass,
+		//		GetActorLocation() + FVector::UpVector * 200.0f,
+		//		GetActorRotation());
+		//		break;
 		//	}
 		//}
-		float TotalWeight = 0.0f;
-		for (auto& elenment : RowMap)
-		{
-			FDropItemData_TableRow* Row = (FDropItemData_TableRow*)elenment.Value;
-			TotalWeight += Row->DropRate;
-
-		}
-		float RandomSelect = FMath::FRandRange(0, TotalWeight);
-		float CurrentWeight = 0.0f;
-		for (auto& elenment : RowMap)
-		{
-			FDropItemData_TableRow* Row = (FDropItemData_TableRow*)elenment.Value;
-			CurrentWeight += Row->DropRate;
-			if (RandomSelect < CurrentWeight)
-			{
-				//당첨 -> 스폰처리
-				GetWorld()->SpawnActor<APickUp>(
-				Row->DropItemClass,
-				GetActorLocation() + FVector::UpVector * 200.0f,
-				GetActorRotation());
-				break;
-			}
-		}
-	}
 }
 
 void AEnemyPawn::Ondie()

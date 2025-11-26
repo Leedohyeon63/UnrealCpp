@@ -16,6 +16,8 @@ class UNREALCPP_API UPickupFactorySettings : public UDeveloperSettings
 {
 	GENERATED_BODY()
 public:
-	UPROPERTY(Config, EditAnywhere, Category = "UI")
-	TMap<EItemCode, TSoftClassPtr<APickUp>> PickupFactories;
+	UPROPERTY(Config, EditAnywhere, Category = "PickupData")
+	TSoftObjectPtr<UDataTable> PickupDataTable;
+	//UPROPERTY(Config, EditAnywhere, Category = "UI")
+	//TMap<EItemCode, TSoftClassPtr<APickUp>> PickupFactories;
 };
