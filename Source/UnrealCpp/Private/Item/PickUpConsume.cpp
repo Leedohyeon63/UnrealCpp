@@ -11,4 +11,8 @@ void APickUpConsume::OnPickUpComolete_Implementation()
 
 void APickUpConsume::OnConsume()
 {
+	if (DataAsset)
+	{
+		DataAsset->Excute(PickupOwner.Get());
+	}
 }

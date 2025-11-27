@@ -8,7 +8,8 @@
 #include "Notify/AnimNotifyState_SectionJump.h"
 #include "InventoryOwner.h"
 #include "Player/WeaponManager.h"
-#include "HasHealth.h"
+#include "Player/InventoryOwner.h"
+#include "Player/HasHealth.h"
 #include "ActionCharacter.generated.h"
 class UInputAction;
 class USpringArmComponent;
@@ -16,7 +17,7 @@ class UCameraComponent;
 class UResourceComponent;
 class UStatusComponent;
 UCLASS()
-class UNREALCPP_API AActionCharacter : public ACharacter, public IInventoryOwner
+class UNREALCPP_API AActionCharacter : public ACharacter, public IInventoryOwner, public IHasHealth
 
 
 {
@@ -40,12 +41,12 @@ public:
 	virtual void AddItem_Implementation(EItemCode Code, int32 Count) override;
 	virtual void AddWeapon_Implementation(EWeaponCode Code, int32 UseCount) override;
 	virtual void AddConsume_Implementation(EItemCode Code) override;
+
 	virtual void AddMoney_Implementation(int32 Income) override;
 	virtual void RemoveMoney_Implementation(int32 Expense) override;
 
-	virtual void HealHP_Implementation(float InHP);
-
-	virtual void DamageHP_Implementation(float Damage);
+	virtual void HealHP_Implementation(float InHP) override;
+	virtual void DamageHP_Implementation(float Damage) override;
 
 
 

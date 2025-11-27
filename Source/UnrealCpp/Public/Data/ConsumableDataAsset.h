@@ -15,5 +15,5 @@ class UNREALCPP_API UConsumableDataAsset : public UDataAsset
 	GENERATED_BODY()
 public:
 	UFUNCTION(BlueprintCallable, Category = "Pick|Consumable")
-	void Excute(AActor* InTarget) const {};
+	virtual void Excute(AActor* InTarget) const {};
 };

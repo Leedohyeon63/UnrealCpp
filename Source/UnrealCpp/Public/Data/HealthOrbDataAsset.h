@@ -14,5 +14,8 @@ class UNREALCPP_API UHealthOrbDataAsset : public UConsumableDataAsset
 {
 	GENERATED_BODY()
 public:
-	virtual void OnConsume()override;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "HealthOrb")
+	float HealAmount = 30.0f;
+
+	virtual void Excute(AActor* InTarget) const override;
 };

@@ -2,4 +2,12 @@
 
 
 #include "Data/HealthOrbDataAsset.h"
+#include "Player/HasHealth.h"
 
+void UHealthOrbDataAsset::Excute(AActor* InTarget) const
+{
+	if (InTarget && InTarget->Implements<UHasHealth>())
+	{
+		IHasHealth::Execute_HealHP(InTarget, HealAmount);
+	}
+}

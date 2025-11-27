@@ -14,5 +14,8 @@ class UNREALCPP_API UMoneyDataAsset : public UConsumableDataAsset
 {
 	GENERATED_BODY()
 public:
-	virtual void OnConsume()override;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Inventory")
+	int32 Money = 100;
+
+	virtual void Excute(AActor* InTarget) const override;
 };
