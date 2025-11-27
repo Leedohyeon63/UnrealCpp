@@ -17,6 +17,8 @@ enum class EItemCode : uint8
 	HealthPotion UMETA(DisplayName = "체력물약"),
 	StaminaPotion UMETA(DisplayName = "스테미나물약"),
 	Crown UMETA(DisplayName = "왕관"),
+	HPOrb UMETA(DisplayName = "힐링오브"),
+	Coin UMETA(DisplayName = "코인"),
 	
 };
 

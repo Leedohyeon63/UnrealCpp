@@ -116,6 +116,11 @@ void AActionCharacter::AddWeapon_Implementation(EWeaponCode Code, int32 UseCount
 	CurrentWeapon->OnWeaponPickuped(UseCount);
 }
 
+void AActionCharacter::AddConsume_Implementation(EItemCode Code)
+{
+
+}
+
 
 void AActionCharacter::OnAttackEnable(bool bEnable)
 {
@@ -137,6 +142,8 @@ void AActionCharacter::EquipWeapon(EWeaponCode WeaponCode)
 			&& CurrentWeapon->CanAttack())							// 장비하고 있던 무기에 회수가 남아있는 상황이면
 		{
 			DropCurrentWeapon(CurrentWeapon->GetItemCode());
+			UE_LOG(LogTemp, Log, TEXT("무기 교체"));
+
 		}
 
 		// 장비하고 있던 무기는 해제
@@ -151,6 +158,10 @@ void AActionCharacter::EquipWeapon(EWeaponCode WeaponCode)
 		CurrentWeapon->SetWeaponOwner(this); // <--- 이 줄을 추가하세요!
 		CurrentWeapon->WeaponActivate(true);
 	}
+}
+
+void AActionCharacter::ItemConsume(EItemCode Code)
+{
 }
 
 void AActionCharacter::OnWeaponTrailEnable(bool bEnable)

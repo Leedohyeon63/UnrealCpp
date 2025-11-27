@@ -78,12 +78,22 @@ void UWeaponManager::ValidateWeaponDataBase()
 	{
 		for (const auto& pair : WeaponDatabase)
 		{
+			UE_LOG(LogTemp, Warning, TEXT("무기 한개 체크"));
 			if (!pair.Value)
 			{
 				UE_LOG(LogTemp, Error, TEXT("무기(%d)의 데이터가 null"), static_cast<int32>(pair.Key));
 			}
-			else if (!pair.Value->IsValid())
+			else if (!(pair.Value->IsValid()))
 			{
+				bool bResult = pair.Value->IsValid();
+				if (bResult)
+				{
+					UE_LOG(LogTemp, Error, TEXT("유효함"));
+				}
+				else
+				{
+					UE_LOG(LogTemp, Error, TEXT("유효하지 않음"));
+				}
 				UE_LOG(LogTemp, Error, TEXT("무기(%d)의 데이터가 유효하지 않습니다."), static_cast<int32>(pair.Key));
 			}
 			else if (pair.Key != pair.Value->WeaponType)

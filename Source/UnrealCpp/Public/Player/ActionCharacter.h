@@ -38,6 +38,7 @@ public:
 
 	virtual void AddItem_Implementation(EItemCode Code, int32 Count);
 	virtual void AddWeapon_Implementation(EWeaponCode Code, int32 UseCount);
+	virtual void AddConsume_Implementation(EItemCode Code);
 
 	void OnAttackEnable(bool bEnable);
 
@@ -51,6 +52,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
 	void EquipWeapon(EWeaponCode WeaponCode);
+	
+	UFUNCTION(BlueprintCallable, Category = "pickup")
+	void ItemConsume(EItemCode Code);
 
 	inline void SetSectionJumpNotify(class UAnimNotifyState_SectionJump* InSectionjumpNotify) 
 	{

@@ -41,6 +41,6 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon")
 	bool IsValid() const
 	{
-		return EquippedWeaponClass != nullptr && UsedWaeponClass != nullptr && PickupWeaponClass != nullptr;
+		return (EquippedWeaponClass != nullptr) && (UsedWaeponClass != nullptr) && (PickupWeaponClass != nullptr);
 	}
 };
