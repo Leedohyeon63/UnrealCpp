@@ -26,7 +26,8 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	virtual void OnPickUp_Implementation(AActor* Target) override;
-	inline void SetPickupCount(int32 InCount) { PickupCount = InCount; }
+	virtual void OnPickUpComolete_Implementation() override;
+	//inline void SetPickupCount(int32 InCount) { PickupCount = InCount; }
 	void AddImpulse(FVector& Velocity);
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
@@ -44,8 +45,8 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<class UTimelineComponent> PickUpTimeline = nullptr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "PickUp")
-	EItemCode PickupItem = EItemCode::BasicWeapon;
+	//UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "PickUp")
+	//EItemCode PickupItem = EItemCode::BasicWeapon;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PickUp")
 	float PickupTime = 3.0f;
@@ -53,8 +54,8 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PickUp")
 	float RotateSpeed = 180.0f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Pickup")
-	int32 PickupCount = 1;
+	//UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Pickup")
+	//int32 PickupCount = 1;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "PickUp")
 	TObjectPtr<UCurveFloat> ScaleCurve = nullptr;//스케일 커브
@@ -70,6 +71,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PickUp")
 	float PickupHeight = 0.5f;
+
+	UPROPERTY()
+	TWeakObjectPtr<AActor> PickupOwner = nullptr;
 
 private:
 	UFUNCTION()
@@ -87,8 +91,6 @@ private:
 	void OnTimelineFinish();
 
 private:
-	TWeakObjectPtr<AActor> PickupOwner = nullptr;
-
 	bool bPickuped = false;
 	//획득했을 때 메시 위치
 	FVector PickupStartLocation;

@@ -27,4 +27,7 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "PickUp")
 	void OnPickUp(AActor* Target);
 
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "PickUp")
+	void OnPickUpComolete();
+
 };

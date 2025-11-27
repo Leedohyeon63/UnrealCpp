@@ -6,6 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "Common/CommonEnum.h"
 #include "Data/WeaponDataAsset.h"
+#include "Item/PickUpWeapon.h"
 #include "WeaponManager.generated.h"
 
 class AWeaponActor;
@@ -23,7 +24,7 @@ public:
 
 	AWeaponActor* GetEquippedWeapon(EWeaponCode InType) const;
 	TSubclassOf<AUsedWeapon> GetUsedWeaponClass(EWeaponCode InType) const;
-	TSubclassOf<APickUp> GetPickupWeaponClass(EWeaponCode InType) const;
+	TSubclassOf<APickUpWeapon> GetPickupWeaponClass(EWeaponCode InType) const;
 
 	inline EItemCode GetItemCode(EWeaponCode Code) const
 	{

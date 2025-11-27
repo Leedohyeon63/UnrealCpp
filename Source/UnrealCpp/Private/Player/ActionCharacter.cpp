@@ -11,6 +11,7 @@
 #include "Weapon/ConsumableWeapon.h"
 #include "Weapon/WeaponActor.h"
 #include "Item/IEquipable.h"
+#include "Item/PickUpWeapon.h"
 
 // Sets default values
 AActionCharacter::AActionCharacter()
@@ -104,9 +105,15 @@ void AActionCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 void AActionCharacter::AddItem_Implementation(EItemCode Code, int32 Count)
 {
-	EWeaponCode weaponCode = WeaponManager->GetWeaponCode(Code);
-	EquipWeapon(weaponCode);
-	CurrentWeapon->OnWeaponPickuped(Count);
+	//EWeaponCode weaponCode = WeaponManager->GetWeaponCode(Code);
+	//EquipWeapon(weaponCode);
+	//CurrentWeapon->OnWeaponPickuped(Count);
+}
+
+void AActionCharacter::AddWeapon_Implementation(EWeaponCode Code, int32 UseCount)
+{
+	EquipWeapon(Code);
+	CurrentWeapon->OnWeaponPickuped(UseCount);
 }
 
 
@@ -266,9 +273,9 @@ void AActionCharacter::DropCurrentWeapon(EWeaponCode WeaponCode)
 {
 	if (CurrentWeapon.IsValid() && (CurrentWeapon->GetItemCode() != EWeaponCode::BasicWeapon))
 	{
-		if (TSubclassOf<APickUp> pickupClass = WeaponManager->GetPickupWeaponClass(WeaponCode))
+		if (TSubclassOf<APickUpWeapon> pickupClass = WeaponManager->GetPickupWeaponClass(WeaponCode))
 		{
-			APickUp* pickup = GetWorld()->SpawnActor<APickUp>(
+			APickUpWeapon* pickup = GetWorld()->SpawnActor<APickUpWeapon>(
 				pickupClass,
 				DropLocation->GetComponentLocation(),
 				GetActorRotation()
@@ -276,7 +283,7 @@ void AActionCharacter::DropCurrentWeapon(EWeaponCode WeaponCode)
 
 			// 새로 생긴 픽업에 남은 회수 넣기
 			AConsumableWeapon* conWeapon = Cast<AConsumableWeapon>(CurrentWeapon);
-			pickup->SetPickupCount(conWeapon->GetRemainingUseCount());
+			pickup->SetWeaponUseCount(conWeapon->GetRemainingUseCount());
 
 			FVector velocity = (GetActorForwardVector() + GetActorUpVector()) * 300.0f;
 			pickup->AddImpulse(velocity);

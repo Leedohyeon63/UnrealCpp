@@ -111,6 +111,11 @@ void APickUp::OnPickUp_Implementation(AActor* Target)
 	}
 }
 
+void APickUp::OnPickUpComolete_Implementation()
+{
+	Destroy();
+}
+
 void APickUp::OnPickUpOverLap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 }
@@ -125,10 +130,9 @@ void APickUp::OnTimelineUpdate(float InValue)
 	float DistanceValue = InValue;
 	float HeightValue = HeightCurve? HeightCurve->GetFloatValue(CurrentTime) : 0.0f;
 	float ScaleValue = ScaleCurve ? ScaleCurve->GetFloatValue(CurrentTime) : 1.0f;
-
 	//UE_LOG(LogTemp, Log, TEXT("DistanceValue : %.2f"), DistanceValue);
 	//UE_LOG(LogTemp, Log, TEXT("DistanceValue : %.2f"), DistanceValue);
-	UE_LOG(LogTemp, Log, TEXT("ScaleValue : %.2f"), ScaleValue);
+	//UE_LOG(LogTemp, Log, TEXT("ScaleValue : %.2f"), ScaleValue);
 
 	//커브 값을 기준으로 새 위치와 스케일 계산
 	FVector NewLocation = FMath::Lerp(PickupStartLocation, PickupOwner.Get()->GetActorLocation(), DistanceValue);
@@ -142,11 +146,12 @@ void APickUp::OnTimelineUpdate(float InValue)
 
 void APickUp::OnTimelineFinish()
 {
-	if (PickupOwner.IsValid() && PickupOwner->Implements<UInventoryOwner>())
-	{
-		IInventoryOwner::Execute_AddItem(PickupOwner.Get(), PickupItem, PickupCount);
-	}
-	Destroy();
+	OnPickUpComolete_Implementation();
+	//if (PickupOwner.IsValid() && PickupOwner->Implements<UInventoryOwner>())
+	//{
+	//	IInventoryOwner::Execute_AddItem(PickupOwner.Get(), PickupItem, PickupCount);
+	//}
+	//Destroy();
 
 }
 

@@ -37,6 +37,7 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	virtual void AddItem_Implementation(EItemCode Code, int32 Count);
+	virtual void AddWeapon_Implementation(EWeaponCode Code, int32 UseCount);
 
 	void OnAttackEnable(bool bEnable);
 
