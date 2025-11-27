@@ -100,7 +100,6 @@ void UResourceComponent::AddHP(float InValue)
 {
 
 	SetCurrentHealth(CurrentHP+InValue);
-
 	if (!IsAlive())
 	{
 		OnDie.Broadcast();

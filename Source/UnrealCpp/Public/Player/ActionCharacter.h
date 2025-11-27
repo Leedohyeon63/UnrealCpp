@@ -8,6 +8,7 @@
 #include "Notify/AnimNotifyState_SectionJump.h"
 #include "InventoryOwner.h"
 #include "Player/WeaponManager.h"
+#include "HasHealth.h"
 #include "ActionCharacter.generated.h"
 class UInputAction;
 class USpringArmComponent;
@@ -36,9 +37,17 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	virtual void AddItem_Implementation(EItemCode Code, int32 Count);
-	virtual void AddWeapon_Implementation(EWeaponCode Code, int32 UseCount);
-	virtual void AddConsume_Implementation(EItemCode Code);
+	virtual void AddItem_Implementation(EItemCode Code, int32 Count) override;
+	virtual void AddWeapon_Implementation(EWeaponCode Code, int32 UseCount) override;
+	virtual void AddConsume_Implementation(EItemCode Code) override;
+	virtual void AddMoney_Implementation(int32 Income) override;
+	virtual void RemoveMoney_Implementation(int32 Expense) override;
+
+	virtual void HealHP_Implementation(float InHP);
+
+	virtual void DamageHP_Implementation(float Damage);
+
+
 
 	void OnAttackEnable(bool bEnable);
 

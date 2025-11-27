@@ -121,6 +121,34 @@ void AActionCharacter::AddConsume_Implementation(EItemCode Code)
 
 }
 
+void AActionCharacter::AddMoney_Implementation(int32 Income)
+{
+	UE_LOG(LogTemp, Log, TEXT("돈얻음 %d"), Income);
+
+}
+
+void AActionCharacter::RemoveMoney_Implementation(int32 Expense)
+{
+	UE_LOG(LogTemp, Log, TEXT("돈잃음 %d"), Expense);
+
+}
+
+void AActionCharacter::HealHP_Implementation(float InHP)
+{
+	if (Resource)
+	{
+		Resource->AddHP(InHP);
+	}
+}
+
+void AActionCharacter::DamageHP_Implementation(float Damage)
+{
+	if (Resource)
+	{
+		Resource->AddHP(-Damage);
+	}
+}
+
 
 void AActionCharacter::OnAttackEnable(bool bEnable)
 {

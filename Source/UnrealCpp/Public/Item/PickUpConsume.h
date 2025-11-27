@@ -16,6 +16,7 @@ class UNREALCPP_API APickUpConsume : public APickUp
 public:
 	virtual void OnPickUpComolete_Implementation() override;
 
+	virtual void OnConsume();
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "PickUp|Weapon")
 	EItemCode PickupConsumeItem = EItemCode::HPOrb;
