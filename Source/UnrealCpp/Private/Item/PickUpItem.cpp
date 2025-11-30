@@ -8,7 +8,7 @@ void APickUpItem::OnPickUpComolete_Implementation()
 {
 	if (PickupOwner.IsValid() && PickupOwner->Implements<UInventoryOwner>())
 	{
-		IInventoryOwner::Execute_AddItem(PickupOwner.Get(), PickupItem, ItemCount);
+		IInventoryOwner::Execute_AddItem(PickupOwner.Get(), PickupItemData, ItemCount);
 		UE_LOG(LogTemp, Log, TEXT("APickupWeapon::OnPickupComplete_Implementation2"));
 
 	}

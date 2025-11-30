@@ -16,6 +16,7 @@ class USpringArmComponent;
 class UCameraComponent;
 class UResourceComponent;
 class UStatusComponent;
+class UInventoryComponent;
 UCLASS()
 class UNREALCPP_API AActionCharacter : public ACharacter, public IInventoryOwner, public IHasHealth
 
@@ -38,7 +39,7 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	virtual void AddItem_Implementation(EItemCode Code, int32 Count) override;
+	virtual void AddItem_Implementation(UItemDataAsset* ItemData, int32 Count) override;
 	virtual void AddWeapon_Implementation(EWeaponCode Code, int32 UseCount) override;
 	virtual void AddConsume_Implementation(EItemCode Code) override;
 
@@ -48,17 +49,17 @@ public:
 	virtual void HealHP_Implementation(float InHP) override;
 	virtual void DamageHP_Implementation(float Damage) override;
 
-
-
 	void OnAttackEnable(bool bEnable);
 
 	void OnWeaponTrailEnable(bool bEnable);
 
 	void OnAreaColisionEnable(bool bEnable);
 
+	UResourceComponent* GetResourceComponent() const { return Resource; }
+	UStatusComponent* GetStatusComponent() const { return Status; }
 
-	UResourceComponent* GetResourceComponent() { return Resource; }
-	UStatusComponent* GetStatusComponent() { return Status; }
+	UFUNCTION(BlueprintCallable, Category = "Player|Inventory")
+	virtual UInventoryComponent* GetInventoryComponent() const override { return Inventory; }
 
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
 	void EquipWeapon(EWeaponCode WeaponCode);
@@ -123,6 +124,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Player|Weapon")
 	TObjectPtr<class UWeaponManager> WeaponManager = nullptr;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Player|Inventory")
+	TObjectPtr<class UInventoryComponent> Inventory = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "input")
 	TObjectPtr<UInputAction> IA_Move = nullptr;
