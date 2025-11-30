@@ -108,6 +108,9 @@ void AActionCharacter::AddItem_Implementation(EItemCode Code, int32 Count)
 	//EWeaponCode weaponCode = WeaponManager->GetWeaponCode(Code);
 	//EquipWeapon(weaponCode);
 	//CurrentWeapon->OnWeaponPickuped(Count);
+	const UEnum* EnumPtr = StaticEnum<EItemCode>();
+	UE_LOG(LogTemp, Log, TEXT("아이템"));
+
 }
 
 void AActionCharacter::AddWeapon_Implementation(EWeaponCode Code, int32 UseCount)

@@ -19,7 +19,7 @@ public:
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "PickUp|Item")
-	EItemCode PickupItem = EItemCode::BasicWeapon;
+	EItemCode PickupItem = EItemCode::Crown;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Pickup|Item")
 	int32 ItemCount = 1;
