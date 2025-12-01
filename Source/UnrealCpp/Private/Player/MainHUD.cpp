@@ -4,6 +4,7 @@
 
 
 #include "Player/MainHUD.h"
+#include "Player/ActionPlayerController.h"
 #include "Blueprint/UserWidget.h"
 
 
@@ -12,10 +13,19 @@ void AMainHUD::BeginPlay()
 	Super::BeginPlay();
 	if (MainWidgetClass)
 	{
-		UUserWidget* Widget = CreateWidget<UUserWidget>(GetWorld(), MainWidgetClass);
-		if (Widget)
+		MainWidgetInstanse = CreateWidget<UMainHudWidget>(GetWorld(), MainWidgetClass);
+		if (MainWidgetInstanse)
 		{
-			Widget->AddToViewport();
+			AActionPlayerController* Pc = Cast<AActionPlayerController>(GetOwningPlayerController());
+			MainWidgetInstanse->AddToViewport();
+			if (Pc)
+			{
+				Pc->SetMainHudWidget(MainWidgetInstanse);
+				FScriptDelegate Delegate;
+				Delegate.BindUFunction(Pc, "CloseInventoryWidget");
+				MainWidgetInstanse->AddToInventoryCloseDelegate(Delegate);
+
+			}
 		}
 	}
 

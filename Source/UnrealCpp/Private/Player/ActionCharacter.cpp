@@ -253,6 +253,11 @@ void AActionCharacter::OnMoveInput(const FInputActionValue& Invalue)
 
 void AActionCharacter::OnRollInput(const FInputActionValue& Invalue)
 {
+	if (GetController()->IsMoveInputIgnored())
+	{
+		return;
+	}
+
 	if (AnimInstance.IsValid())
 	{
 		if (!AnimInstance->IsAnyMontagePlaying() && Resource->HasEnoughStamina(RollCost))
@@ -269,7 +274,11 @@ void AActionCharacter::OnRollInput(const FInputActionValue& Invalue)
 
 void AActionCharacter::OnAttackInput(const FInputActionValue& Invalue)
 {
-	
+	if (GetController()->IsMoveInputIgnored())
+	{
+		return;
+	}
+
 	if (AnimInstance.IsValid() && Resource->HasEnoughStamina(AttackCost)&& (CurrentWeapon.IsValid() && CurrentWeapon->CanAttack()))
 	{
 		if (!AnimInstance->IsAnyMontagePlaying())

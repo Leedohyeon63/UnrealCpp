@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Inventory/InventoryWidget.h"
 #include "MainHudWidget.generated.h"
 
 UENUM(BlueprintType)
@@ -30,7 +31,15 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "UI|Inventory")
 	void CloseInventory();
 
-	inline EOpenState GetOpenState()const { return OpenState; }
+	void AddToInventoryCloseDelegate(const FScriptDelegate& Delegate) 
+	{
+		if (Inventory)
+		{
+			Inventory->OnInventoryCloseRequsted.Add(Delegate);
+		}
+	};
+
+	inline EOpenState GetOpenState()const { return OpenState;}
 protected:
 	// meta = (BindWidget) 위젯 블루프린트하고 이 클래스의 변수를 바인드 하겠다
 	//위젯 블루프린트의 변수명과 이 클래스의 변수명이 반드시 같아야 한다 대소문자 포함
@@ -41,7 +50,7 @@ protected:
 	TObjectPtr<class UResourcebarWidget> StaminaBar;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Inventory", meta = (BindWidget))
-	TObjectPtr<class UInventoryWidget> Inventory;
+	TObjectPtr<UInventoryWidget> Inventory;
 private:
 	EOpenState OpenState = EOpenState::Close;
 };

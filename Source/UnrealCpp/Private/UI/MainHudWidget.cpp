@@ -5,7 +5,7 @@
 #include "Player/ActionCharacter.h"
 #include "Player/ResourceComponent.h"
 #include "UI/ResourceBarWidget.h"
-#include "Inventory/InventoryWidget.h"
+
 
 void UMainHudWidget::NativeConstruct()
 {
@@ -26,7 +26,8 @@ void UMainHudWidget::NativeConstruct()
 
 		if (UInventoryComponent* InventoryComponent = player->GetInventoryComponent())
 		{
-			Inventory->OnInventoryCloseRequsted.AddDynamic(this, &UMainHudWidget::CloseInventory);
+			//Inventory->OnInventoryCloseRequsted.AddDynamic(this, &UMainHudWidget::CloseInventory);
+			
 		}
 	}
 
@@ -36,9 +37,12 @@ void UMainHudWidget::NativeConstruct()
 void UMainHudWidget::OpenInventory()
 {
 	Inventory->SetVisibility(ESlateVisibility::Visible);
+	OpenState = EOpenState::Open;
 }
 
 void UMainHudWidget::CloseInventory()
 {
 	Inventory->SetVisibility(ESlateVisibility::Hidden);
+	OpenState = EOpenState::Close;
+
 }

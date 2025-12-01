@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "InputActionValue.h"
+#include "UI/MainHudWidget.h"
 #include "ActionPlayerController.generated.h"
 
 class UInputMappingContext;
@@ -21,9 +22,15 @@ protected:
 	virtual void BeginPlay() override;
 public:
 	virtual void SetupInputComponent() override;
+	inline void SetMainHudWidget(UMainHudWidget* Widget) { MainHubWidget = Widget; }
+	void OpenInventoryWidget();
+	UFUNCTION()
+	void CloseInventoryWidget();
 
 private:
 	void OnLookInput(const FInputActionValue& InValue);
+	void OnInvnentoryOnOff();
+
 
 protected:
 
@@ -31,7 +38,10 @@ protected:
 	TObjectPtr<UInputMappingContext> DefaultMapping = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
-	TObjectPtr<UInputAction> IA_Look;
+	TObjectPtr<UInputAction> IA_Look = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	TObjectPtr<UInputAction> IA_InventoryOnOff = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Camera|Pitch")
 	float VewPitchMin = -40;
@@ -41,4 +51,6 @@ protected:
 
 private:
 	int32 GameInputPriority = 1;
+	TWeakObjectPtr<UMainHudWidget> MainHubWidget = nullptr;
+
 };
