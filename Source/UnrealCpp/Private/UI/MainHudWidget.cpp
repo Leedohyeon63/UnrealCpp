@@ -5,17 +5,40 @@
 #include "Player/ActionCharacter.h"
 #include "Player/ResourceComponent.h"
 #include "UI/ResourceBarWidget.h"
+#include "Inventory/InventoryWidget.h"
 
 void UMainHudWidget::NativeConstruct()
 {
 	AActionCharacter* player = Cast<AActionCharacter>(GetOwningPlayerPawn());
-	if (player && player->GetResourceComponent())
-	{
-		UResourceComponent* resource = player->GetResourceComponent();
-		resource->OnHPChange.AddUObject(HPBar.Get(), &UResourcebarWidget::RefreshWidget);
-		resource->OnStaminaChange.AddDynamic(StaminaBar.Get(), &UResourcebarWidget::RefreshWidget);
+	CloseInventory();
 
-		HPBar->RefreshWidget(resource->GetCurrentHealth(), resource->GetMaxHealth());
-		StaminaBar->RefreshWidget(resource->GetCurrentStamina(), resource->GetMaxStamina());
+	if (player)
+	{
+
+		if (UResourceComponent* resource = player->GetResourceComponent())
+		{
+			resource->OnHPChange.AddUObject(HPBar.Get(), &UResourcebarWidget::RefreshWidget);
+			resource->OnStaminaChange.AddDynamic(StaminaBar.Get(), &UResourcebarWidget::RefreshWidget);
+
+			HPBar->RefreshWidget(resource->GetCurrentHealth(), resource->GetMaxHealth());
+			StaminaBar->RefreshWidget(resource->GetCurrentStamina(), resource->GetMaxStamina());
+		}
+
+		if (UInventoryComponent* InventoryComponent = player->GetInventoryComponent())
+		{
+			Inventory->OnInventoryCloseRequsted.AddDynamic(this, &UMainHudWidget::CloseInventory);
+		}
 	}
+
+
+}
+
+void UMainHudWidget::OpenInventory()
+{
+	Inventory->SetVisibility(ESlateVisibility::Visible);
+}
+
+void UMainHudWidget::CloseInventory()
+{
+	Inventory->SetVisibility(ESlateVisibility::Hidden);
 }
