@@ -80,17 +80,18 @@ public:
 
 
 	// 특정 슬롯을 확인하기 위한 함수. 읽기 전용. (InSlotIndex: 확인할 슬롯)
-	UFUNCTION(BlueprintCallable, Category = "Inventory")
-	const FInvenSlot& GetSlotData(int32 InSlotIndex) const;
+	//UFUNCTION(BlueprintCallable, Category = "Inventory")
+	FInvenSlot* GetSlotData(int32 InSlotIndex);
 
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	inline bool IsValidIndex(int32 InSlotIndex) const {
 		return InSlotIndex < InventorySize && InSlotIndex >= 0;
 	};
 
+	inline int32 GetInventorySize()const { return InventorySize; }
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Inventory")
-	int32 InventorySize = 4;
+	int32 InventorySize = 10;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Inventory")
 	TArray<FInvenSlot> Slots;

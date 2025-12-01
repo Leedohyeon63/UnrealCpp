@@ -6,6 +6,8 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputMappingContext.h"
 #include "Player/MainHUD.h"
+#include "Components/InventoryComponent.h"
+#include "Player/ActionCharacter.h"
 void AActionPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
@@ -31,6 +33,23 @@ void AActionPlayerController::SetupInputComponent()
 		//UE_LOG(LogTemp, Log, TEXT("바인드 성공"));
 		enhanced->BindAction(IA_Look, ETriggerEvent::Triggered, this, &AActionPlayerController::OnLookInput);
 		enhanced->BindAction(IA_InventoryOnOff, ETriggerEvent::Started, this, &AActionPlayerController::OnInvnentoryOnOff);
+	}
+}
+
+void AActionPlayerController::InitializeMainHudWidget(UMainHudWidget* Widget)
+{
+	if (Widget)
+	{
+		MainHubWidget = Widget;
+		FScriptDelegate Delegate;
+		Delegate.BindUFunction(this, "CloseInventoryWidget");
+		MainHubWidget->AddToInventoryCloseDelegate(Delegate);
+
+		InventoryWidget = MainHubWidget->GetInventoryWidget();
+		if (InventoryWidget.IsValid())
+		{
+			InventoryWidget->InitailizeInventoryWidget(InventoryComponent.Get());
+		}
 	}
 }
 
@@ -88,4 +107,25 @@ void AActionPlayerController::CloseInventoryWidget()
 		//SetIgnoreMoveInput(false);
 		MainHubWidget->CloseInventory();
 	}
+}
+
+void AActionPlayerController::OnPossess(APawn* aPawn)
+{
+	Super::OnPossess(aPawn);
+	AActionCharacter* player = Cast<AActionCharacter>(aPawn);
+	if (player)
+	{
+		InventoryComponent = player->GetInventoryComponent();
+		if (InventoryWidget.IsValid())
+		{
+			InventoryWidget->InitailizeInventoryWidget(InventoryComponent.Get());
+
+		}
+	}
+}
+
+void AActionPlayerController::OnUnPossess()
+{
+	InventoryComponent = nullptr;
+	Super::OnUnPossess();
 }

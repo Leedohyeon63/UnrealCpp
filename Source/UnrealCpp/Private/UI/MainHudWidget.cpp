@@ -36,6 +36,7 @@ void UMainHudWidget::NativeConstruct()
 
 void UMainHudWidget::OpenInventory()
 {
+	Inventory->RefreshInventory();
 	Inventory->SetVisibility(ESlateVisibility::Visible);
 	OpenState = EOpenState::Open;
 }

@@ -39,6 +39,7 @@ public:
 		}
 	};
 
+	inline UInventoryWidget* GetInventoryWidget() const { return Inventory; }
 	inline EOpenState GetOpenState()const { return OpenState;}
 protected:
 	// meta = (BindWidget) 위젯 블루프린트하고 이 클래스의 변수를 바인드 하겠다

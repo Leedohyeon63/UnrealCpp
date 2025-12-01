@@ -20,11 +20,7 @@ void AMainHUD::BeginPlay()
 			MainWidgetInstanse->AddToViewport();
 			if (Pc)
 			{
-				Pc->SetMainHudWidget(MainWidgetInstanse);
-				FScriptDelegate Delegate;
-				Delegate.BindUFunction(Pc, "CloseInventoryWidget");
-				MainWidgetInstanse->AddToInventoryCloseDelegate(Delegate);
-
+				Pc->InitializeMainHudWidget(MainWidgetInstanse);
 			}
 		}
 	}

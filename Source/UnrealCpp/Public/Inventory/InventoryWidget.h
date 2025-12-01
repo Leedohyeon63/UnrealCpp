@@ -20,6 +20,9 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "UI|Inventory")
 	FOnInvnetoryCloseRequested OnInventoryCloseRequsted;
 
+	void InitailizeInventoryWidget(class UInventoryComponent* InventoryComponent);
+	void RefreshInventory();
+	void ClearInvnetory();
 private:
 	UFUNCTION()
 	void OnCloseClicked();
@@ -27,5 +30,12 @@ private:
 protected:
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<class UButton> CloseButton = nullptr;
+private:
+	UPROPERTY()
+	TWeakObjectPtr<UInventoryComponent> TargetInventory = nullptr;
 
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<class UUniformGridPanel> SlotGridPanel = nullptr;
+
+	TArray<TObjectPtr<class UInventorySlotWidget>> SlotWidgets;
 };
