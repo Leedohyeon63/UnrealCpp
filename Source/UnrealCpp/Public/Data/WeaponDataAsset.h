@@ -6,10 +6,10 @@
 #include "Engine/DataAsset.h"
 #include "Common/CommonEnum.h"
 #include "Item/PickUpWeapon.h"
+#include "Weapon/UsedWeapon.h"
 #include "WeaponDataAsset.generated.h"
-
 class AWeaponActor;
-class AUsedWeapon;
+
 
 /**
  * 

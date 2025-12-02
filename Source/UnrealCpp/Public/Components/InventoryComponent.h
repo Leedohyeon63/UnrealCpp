@@ -6,7 +6,6 @@
 #include "Components/ActorComponent.h"
 #include "Data/ItemDataAsset.h"
 #include "InventoryComponent.generated.h"
-
 USTRUCT(BlueprintType)
 struct FInvenSlot
 {
@@ -48,6 +47,8 @@ protected:
 	int32 Count = 0;
 };
 
+DECLARE_DYNAMIC_DELEGATE_OneParam(FOnInventorySlotChanged, int32, InIndex);
+DECLARE_DYNAMIC_DELEGATE_OneParam(FOnInventoryMoneyChanged, int32, CurrentMoney);
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class UNREALCPP_API UInventoryComponent : public UActorComponent
 {
@@ -59,14 +60,24 @@ public:
 
 	// 인벤토리 컴포넌트에서 각종 함수가 실패했을 때 리턴하는 상수
 	static const int32 InventoryFail = -1;
+
+	FOnInventorySlotChanged OnInventorySlotChanged;
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 public:
+	FOnInventoryMoneyChanged OnInventoryMoneyChanged;
+
+public:
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	void AddMoney(int32 InIncome);
 	// 아이템을 추가하는 함수
 	// (리턴:못먹은 아이템의 수, InItemData: 추가되는 아이템의 종류, InCount: 추가되는 아이템의 갯수)
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	int32 AddItem(UItemDataAsset* InItemData, int32 InCount);
+
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	void UseItem(int32 InUseIndex);
 
 	// 특정 칸에 있는 아이템의 갯수를 조절하는 함수(증가/감소)
 	// InSlotIndex: 변경할 슬롯, InDeltaCount: 변화량
@@ -93,7 +104,10 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Inventory")
 	int32 InventorySize = 10;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Inventory")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Inventory|Money")
+	int32 Money = 0;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Inventory|Slot")
 	TArray<FInvenSlot> Slots;
 
 private:

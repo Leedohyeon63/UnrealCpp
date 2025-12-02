@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+
 #include "InventoryWidget.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInvnetoryCloseRequested);
@@ -27,15 +28,29 @@ private:
 	UFUNCTION()
 	void OnCloseClicked();
 
+	UFUNCTION()
+	void RefreshSlotWidget(int32 InSlotIndex);
 protected:
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<class UButton> CloseButton = nullptr;
+
+	UFUNCTION()
+	void RefreshMoneyPanel(int32 CurrentMoney);
+
+	UFUNCTION(BlueprintCallable, Category = "UI|Inventory")
+	inline bool IsValidIndex(int32 InSlotIndex) const {
+		return InSlotIndex < SlotWidgets.Num() && InSlotIndex >= 0;
+	};
+
 private:
 	UPROPERTY()
 	TWeakObjectPtr<UInventoryComponent> TargetInventory = nullptr;
 
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<class UUniformGridPanel> SlotGridPanel = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<class UGoldPannalWidget> GoldPannal= nullptr;
 
 	TArray<TObjectPtr<class UInventorySlotWidget>> SlotWidgets;
 };

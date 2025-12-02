@@ -10,6 +10,7 @@
 #include "Player/WeaponManager.h"
 #include "Player/InventoryOwner.h"
 #include "Player/HasHealth.h"
+#include "Player/HasStamina.h"
 #include "ActionCharacter.generated.h"
 class UInputAction;
 class USpringArmComponent;
@@ -18,7 +19,7 @@ class UResourceComponent;
 class UStatusComponent;
 class UInventoryComponent;
 UCLASS()
-class UNREALCPP_API AActionCharacter : public ACharacter, public IInventoryOwner, public IHasHealth
+class UNREALCPP_API AActionCharacter : public ACharacter, public IInventoryOwner, public IHasHealth, public IHasStamina
 
 
 {
@@ -48,6 +49,8 @@ public:
 
 	virtual void HealHP_Implementation(float InHP) override;
 	virtual void DamageHP_Implementation(float Damage) override;
+
+	virtual void HealSTM_Implementation(float InStamina) override;
 
 	void OnAttackEnable(bool bEnable);
 

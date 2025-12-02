@@ -29,6 +29,8 @@ public:
 	UFUNCTION()
 	void CloseInventoryWidget();
 
+	UFUNCTION(BlueprintCallable, Category = "UI|Inventory")
+	void ChangeInvnetoryTarget(UInventoryComponent* NewTarget);
 private:
 	void OnLookInput(const FInputActionValue& InValue);
 	void OnInvnentoryOnOff();

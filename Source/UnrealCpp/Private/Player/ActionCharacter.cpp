@@ -150,12 +150,14 @@ void AActionCharacter::AddConsume_Implementation(EItemCode Code)
 void AActionCharacter::AddMoney_Implementation(int32 Income)
 {
 	UE_LOG(LogTemp, Log, TEXT("돈얻음 %d"), Income);
+	Inventory->AddMoney(Income);
 
 }
 
 void AActionCharacter::RemoveMoney_Implementation(int32 Expense)
 {
 	UE_LOG(LogTemp, Log, TEXT("돈잃음 %d"), Expense);
+	Inventory->AddMoney(-Expense);
 
 }
 
@@ -167,11 +169,20 @@ void AActionCharacter::HealHP_Implementation(float InHP)
 	}
 }
 
+
 void AActionCharacter::DamageHP_Implementation(float Damage)
 {
 	if (Resource)
 	{
 		Resource->AddHP(-Damage);
+	}
+}
+
+void AActionCharacter::HealSTM_Implementation(float InStamina)
+{
+	if (Resource)
+	{
+		Resource->AddStamina(InStamina);
 	}
 }
 

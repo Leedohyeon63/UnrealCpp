@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "InventorySlotWidget.generated.h"
 struct FInvenSlot;
+DECLARE_DYNAMIC_DELEGATE_OneParam(FOnSlotClicked, int32, InSlotIndex);
 /**
  * 
  */
@@ -16,6 +17,16 @@ class UNREALCPP_API UInventorySlotWidget : public UUserWidget
 public:
 	void InitializeSlot(int32 InIndex, struct FInvenSlot* InSlotData);
 	void RefreshSlot() const;
+	virtual void NativeOnDragDetected(const FGeometry& InGeometry,
+		const FPointerEvent& InMouseEvent, UDragDropOperation*& OutOperation)override;
+
+	virtual bool NativeOnDrop(const FGeometry& InGeometry, 
+		const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)override;
+
+	virtual void NativeOnDragCancelled(const FDragDropEvent& InDragDropEvent,
+		UDragDropOperation* InOperation)override;
+	FOnSlotClicked OnSlotRightClick;
+
 protected:
 	void ClearSlotWidget() const;
 protected:
@@ -27,6 +38,8 @@ protected:
 	TObjectPtr<class UTextBlock> MaxText = nullptr;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UI|InventorySlot", meta = (BindWidget))
 	TObjectPtr<class UTextBlock> SpaerText = nullptr;
+
+	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 private:
 	int32 Index = -1;
 	FInvenSlot* SlotData = nullptr;

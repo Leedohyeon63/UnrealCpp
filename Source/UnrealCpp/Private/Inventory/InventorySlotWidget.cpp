@@ -2,9 +2,11 @@
 
 
 #include "Inventory/InventorySlotWidget.h"
+#include "UI/IventoryDragDropOperation.h"
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
 #include "Components/InventoryComponent.h"
+#include "string.h"
 
 void UInventorySlotWidget::InitializeSlot(int32 InIndex, FInvenSlot* InSlotData)
 {
@@ -32,6 +34,27 @@ void UInventorySlotWidget::RefreshSlot() const
 	}
 }
 
+void UInventorySlotWidget::NativeOnDragDetected(const FGeometry& InGeometry, 
+	const FPointerEvent& InMouseEvent, UDragDropOperation*& OutOperation)
+{
+	Super::NativeOnDragDetected(InGeometry, InMouseEvent, OutOperation);
+}
+
+bool UInventorySlotWidget::NativeOnDrop(const FGeometry& InGeometry, 
+	const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
+{
+	Super::NativeOnDrop(InGeometry, InDragDropEvent, InOperation);
+	return false;
+}
+
+void UInventorySlotWidget::NativeOnDragCancelled(const FDragDropEvent& InDragDropEvent,
+	UDragDropOperation* InOperation)
+{
+	Super::NativeOnDragCancelled(InDragDropEvent, InOperation);
+}
+
+
+
 void UInventorySlotWidget::ClearSlotWidget() const
 {
 	ItemIconImage->SetBrushFromTexture(nullptr);
@@ -40,4 +63,30 @@ void UInventorySlotWidget::ClearSlotWidget() const
 	MaxText->SetVisibility(ESlateVisibility::Hidden);
 	SpaerText->SetVisibility(ESlateVisibility::Hidden);
 
+}
+
+FReply UInventorySlotWidget::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+{
+	if (InMouseEvent.IsMouseButtonDown(EKeys::RightMouseButton))
+	{
+		if (SlotData->ItemData)
+		{
+			UE_LOG(LogTemp, Log, TEXT("index : %d, ItemData : %s"), Index, *SlotData->ItemData->ItemName.ToString());
+			OnSlotRightClick.ExecuteIfBound(Index);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Log, TEXT("Empty"));
+		}
+		return FReply::Handled();
+	}
+	else if (InMouseEvent.IsMouseButtonDown(EKeys::LeftMouseButton))
+	{
+		if (SlotData->ItemData)
+		{
+			
+		}
+		return FReply::Handled().DetectDrag(TakeWidget(), EKeys::LeftMouseButton);
+	}
+	return Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
 }

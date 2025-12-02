@@ -109,6 +109,14 @@ void AActionPlayerController::CloseInventoryWidget()
 	}
 }
 
+void AActionPlayerController::ChangeInvnetoryTarget(UInventoryComponent* NewTarget)
+{
+	if (NewTarget)
+	{
+		InventoryWidget->InitailizeInventoryWidget(NewTarget);
+	}
+}
+
 void AActionPlayerController::OnPossess(APawn* aPawn)
 {
 	Super::OnPossess(aPawn);

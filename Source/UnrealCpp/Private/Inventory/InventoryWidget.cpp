@@ -2,6 +2,7 @@
 
 #include "Inventory/InventoryWidget.h"
 #include "Inventory/InventorySlotWidget.h"
+#include "Inventory/GoldPannalWidget.h"
 #include "Components/Button.h"
 #include "Components/UniformGridPanel.h"
 #include "Components/InventoryComponent.h"
@@ -18,27 +19,34 @@ void UInventoryWidget::NativeConstruct()
 
 void UInventoryWidget::InitailizeInventoryWidget(UInventoryComponent* InventoryComponent)
 {
-	if (InventoryComponent)
+	if (InventoryComponent && SlotGridPanel)
 	{
-		TargetInventory = InventoryComponent;
-
+		TargetInventory = InventoryComponent;	// 인벤토리 컴포넌트 저장
 		if (TargetInventory.IsValid())
 		{
-			for (size_t i = 0; i < TargetInventory->GetInventorySize(); i++)
+			UE_LOG(LogTemp, Log, TEXT("인벤토리 위젯 초기화"));
+
+			if (SlotGridPanel->GetChildrenCount() != TargetInventory->GetInventorySize())
 			{
-				FInvenSlot* slot = TargetInventory->GetSlotData(i);
+				UE_LOG(LogTemp, Error, TEXT("인벤토리 컴포넌트와 위젯의 슬롯 크기가 다릅니다!!!"));
+				return;
 			}
 
-			int32 Size = FMath::Min(SlotGridPanel->GetChildrenCount(), TargetInventory->GetInventorySize());
-			for (size_t i = 0; i < Size; i++)
+			TargetInventory->OnInventorySlotChanged.BindUFunction(this, "RefreshSlotWidget");
+			TargetInventory->OnInventoryMoneyChanged.BindUFunction(this, "RefreshMoneyPanel");
+
+			RefreshMoneyPanel(0);
+			int32 size = FMath::Min(SlotGridPanel->GetChildrenCount(), TargetInventory->GetInventorySize());
+			SlotWidgets.Empty(size);
+			for (int i = 0; i < size; i++)
 			{
-				FInvenSlot* SlotData = TargetInventory->GetSlotData(i);
-				UInventorySlotWidget* SlotWidget = Cast<UInventorySlotWidget>(SlotGridPanel->GetChildAt(i));
-				SlotWidget->InitializeSlot(i, SlotData);
-				SlotWidgets.Add(SlotWidget);
+				FInvenSlot* slotData = TargetInventory->GetSlotData(i);
+				UInventorySlotWidget* slotWidget = Cast<UInventorySlotWidget>(SlotGridPanel->GetChildAt(i));
+				slotWidget->InitializeSlot(i, slotData);// 인벤토리 컴포넌트에 저장되어있는 슬롯과 슬롯 위젯을 엮어주는 작업
+				slotWidget->OnSlotRightClick.Clear();
+				slotWidget->OnSlotRightClick.BindUFunction(TargetInventory.Get(), "UseItem");
+				SlotWidgets.Add(slotWidget);
 			}
-
-
 		}
 	}
 }
@@ -59,4 +67,17 @@ void UInventoryWidget::ClearInvnetory()
 void UInventoryWidget::OnCloseClicked()
 {
 	OnInventoryCloseRequsted.Broadcast();
+}
+
+void UInventoryWidget::RefreshSlotWidget(int32 InSlotIndex)
+{
+	if (IsValidIndex(InSlotIndex))
+	{
+		SlotWidgets[InSlotIndex]->RefreshSlot();
+	}
+}
+
+void UInventoryWidget::RefreshMoneyPanel(int32 CurrentMoney)
+{
+	GoldPannal->SetGold(CurrentMoney);
 }
