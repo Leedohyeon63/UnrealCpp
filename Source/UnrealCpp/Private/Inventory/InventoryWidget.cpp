@@ -3,6 +3,7 @@
 #include "Inventory/InventoryWidget.h"
 #include "Inventory/InventorySlotWidget.h"
 #include "Inventory/GoldPannalWidget.h"
+#include "UI/IventoryDragDropOperation.h"
 #include "Components/Button.h"
 #include "Components/UniformGridPanel.h"
 #include "Components/InventoryComponent.h"
@@ -40,12 +41,11 @@ void UInventoryWidget::InitailizeInventoryWidget(UInventoryComponent* InventoryC
 			SlotWidgets.Empty(size);
 			for (int i = 0; i < size; i++)
 			{
-				FInvenSlot* slotData = TargetInventory->GetSlotData(i);
+				// 인벤토리 컴포넌트에 저장되어있는 슬롯과 슬롯 위젯을 엮어주는 작업
 				UInventorySlotWidget* slotWidget = Cast<UInventorySlotWidget>(SlotGridPanel->GetChildAt(i));
-				slotWidget->InitializeSlot(i, slotData);// 인벤토리 컴포넌트에 저장되어있는 슬롯과 슬롯 위젯을 엮어주는 작업
-				slotWidget->OnSlotRightClick.Clear();
-				slotWidget->OnSlotRightClick.BindUFunction(TargetInventory.Get(), "UseItem");
-				SlotWidgets.Add(slotWidget);
+				slotWidget->InitializeSlot(TargetInventory.Get(), i);
+
+				SlotWidgets.Add(slotWidget);	// 연결이 끝난 슬롯을 SlotWidgets에 순서대로 저장
 			}
 		}
 	}
@@ -80,4 +80,15 @@ void UInventoryWidget::RefreshSlotWidget(int32 InSlotIndex)
 void UInventoryWidget::RefreshMoneyPanel(int32 CurrentMoney)
 {
 	GoldPannal->SetGold(CurrentMoney);
+}
+
+bool UInventoryWidget::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
+{
+	UIventoryDragDropOperation* invenOp = Cast<UIventoryDragDropOperation>(InOperation);
+	if (invenOp)
+	{
+		UE_LOG(LogTemp, Log, TEXT("인벤토리에 드랍 : 원래 슬롯(%d)으로 아이템이 돌아가야 한다."), invenOp->Index);
+		return true;
+	}
+	return false;
 }

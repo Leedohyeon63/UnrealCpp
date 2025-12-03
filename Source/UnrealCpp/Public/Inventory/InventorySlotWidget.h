@@ -4,8 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Components/InventoryComponent.h"
 #include "InventorySlotWidget.generated.h"
-struct FInvenSlot;
+//struct FInvenSlot;
+//class UInventoryComponent;
 DECLARE_DYNAMIC_DELEGATE_OneParam(FOnSlotClicked, int32, InSlotIndex);
 /**
  * 
@@ -15,16 +17,22 @@ class UNREALCPP_API UInventorySlotWidget : public UUserWidget
 {
 	GENERATED_BODY()
 public:
-	void InitializeSlot(int32 InIndex, struct FInvenSlot* InSlotData);
+	void InitializeSlot(UInventoryComponent* InInventoryComponent, int32 InIndex);
 	void RefreshSlot() const;
 	virtual void NativeOnDragDetected(const FGeometry& InGeometry,
-		const FPointerEvent& InMouseEvent, UDragDropOperation*& OutOperation)override;
+		const FPointerEvent& InMouseEvent,
+		UDragDropOperation*& OutOperation) override;
 
-	virtual bool NativeOnDrop(const FGeometry& InGeometry, 
-		const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)override;
+	// 드래그 완료
+	virtual bool NativeOnDrop(const FGeometry& InGeometry,
+		const FDragDropEvent& InDragDropEvent,
+		UDragDropOperation* InOperation) override;
 
+	// 드래그 취소
 	virtual void NativeOnDragCancelled(const FDragDropEvent& InDragDropEvent,
-		UDragDropOperation* InOperation)override;
+		UDragDropOperation* InOperation) override;
+
+public:
 	FOnSlotClicked OnSlotRightClick;
 
 protected:
@@ -38,9 +46,12 @@ protected:
 	TObjectPtr<class UTextBlock> MaxText = nullptr;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UI|InventorySlot", meta = (BindWidget))
 	TObjectPtr<class UTextBlock> SpaerText = nullptr;
-
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 private:
 	int32 Index = -1;
-	FInvenSlot* SlotData = nullptr;
+
+	FInvenSlot* SlotData = nullptr;	// 구조체는 TWeakObjectPtr이 인식을 못하는 것 같다.
+
+	UPROPERTY()
+	TWeakObjectPtr<UInventoryComponent> TargetInventory = nullptr;
 };

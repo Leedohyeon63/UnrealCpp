@@ -3,6 +3,9 @@
 
 #include "Components/InventoryComponent.h"
 #include "Item/Useabel/UseableItem.h"
+#include "Item/PickUp.h"
+#include "Frame/PickupFactorySubsystem.h"
+
 // Sets default values for this component's properties
 UInventoryComponent::UInventoryComponent()
 {
@@ -161,6 +164,7 @@ void UInventoryComponent::ClearSlotAtIndex(int32 InSlotIndex)
 	//}
 	SetItemAtIndex(InSlotIndex, nullptr, 0);
 }
+
 
 FInvenSlot* UInventoryComponent::GetSlotData(int32 InSlotIndex)
 {

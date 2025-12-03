@@ -41,7 +41,11 @@ protected:
 	inline bool IsValidIndex(int32 InSlotIndex) const {
 		return InSlotIndex < SlotWidgets.Num() && InSlotIndex >= 0;
 	};
-
+protected:
+	// 드래그 완료
+	virtual bool NativeOnDrop(const FGeometry& InGeometry,
+		const FDragDropEvent& InDragDropEvent,
+		UDragDropOperation* InOperation) override;
 private:
 	UPROPERTY()
 	TWeakObjectPtr<UInventoryComponent> TargetInventory = nullptr;

@@ -16,6 +16,10 @@ class UNREALCPP_API UIventoryDragDropOperation : public UDragDropOperation
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory|Sliot")
 	int32 Index = -1;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory|Sliot")
 	TWeakObjectPtr<class UItemDataAsset> ItemData = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory|Slot")
+	int32 Count = 0;
 };
