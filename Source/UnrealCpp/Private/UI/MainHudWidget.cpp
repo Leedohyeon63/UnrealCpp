@@ -38,12 +38,14 @@ void UMainHudWidget::OpenInventory()
 {
 	Inventory->RefreshInventory();
 	Inventory->SetVisibility(ESlateVisibility::Visible);
+	Shop->SetVisibility(ESlateVisibility::Visible);
 	OpenState = EOpenState::Open;
 }
 
 void UMainHudWidget::CloseInventory()
 {
 	Inventory->SetVisibility(ESlateVisibility::Hidden);
+	Shop->SetVisibility(ESlateVisibility::Hidden);
 	OpenState = EOpenState::Close;
 
 }

@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Inventory/InventoryWidget.h"
 #include "Inventory/ItemInfoWidget.h"
+#include "inventory/Shop/ShopWidget.h"
 #include "MainHudWidget.generated.h"
 
 UENUM(BlueprintType)
@@ -53,6 +54,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Inventory", meta = (BindWidget))
 	TObjectPtr<UInventoryWidget> Inventory;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Shop", meta = (BindWidget))
+	TObjectPtr<UShopWidget> Shop;
 private:
 	EOpenState OpenState = EOpenState::Close;
 };
