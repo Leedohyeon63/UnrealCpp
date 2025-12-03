@@ -2,6 +2,7 @@
 
 #include "Inventory/InventoryWidget.h"
 #include "Inventory/InventorySlotWidget.h"
+#include "Inventory/ItemInfoWidget.h"
 #include "Inventory/GoldPannalWidget.h"
 #include "UI/IventoryDragDropOperation.h"
 #include "Components/Button.h"
@@ -44,7 +45,6 @@ void UInventoryWidget::InitailizeInventoryWidget(UInventoryComponent* InventoryC
 				// 인벤토리 컴포넌트에 저장되어있는 슬롯과 슬롯 위젯을 엮어주는 작업
 				UInventorySlotWidget* slotWidget = Cast<UInventorySlotWidget>(SlotGridPanel->GetChildAt(i));
 				slotWidget->InitializeSlot(TargetInventory.Get(), i);
-
 				SlotWidgets.Add(slotWidget);	// 연결이 끝난 슬롯을 SlotWidgets에 순서대로 저장
 			}
 		}

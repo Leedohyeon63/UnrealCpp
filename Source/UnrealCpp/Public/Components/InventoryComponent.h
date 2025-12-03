@@ -30,8 +30,10 @@ public:
 	}
 
 	// getter/setter
-	int32 GetCount() const { return Count; }
-	void SetCount(int32 NewCount) {
+
+	inline int32 GetRemianingCount() const { return ItemData ? ItemData->ItemMaxStackCount - Count : 0; }
+	inline int32 GetCount() const { return Count; }
+	inline void SetCount(int32 NewCount) {
 		if (ItemData && NewCount > 0)
 		{
 			Count = FMath::Clamp(NewCount, 0, ItemData->ItemMaxStackCount);

@@ -106,6 +106,7 @@ void AActionPlayerController::CloseInventoryWidget()
 		//SetIgnoreLookInput(false);
 		//SetIgnoreMoveInput(false);
 		MainHubWidget->CloseInventory();
+
 	}
 }
 

@@ -57,4 +57,5 @@ private:
 	TObjectPtr<class UGoldPannalWidget> GoldPannal= nullptr;
 
 	TArray<TObjectPtr<class UInventorySlotWidget>> SlotWidgets;
+	TArray<TObjectPtr<class UInventorySlotWidget>> SlotWidgets2;
 };

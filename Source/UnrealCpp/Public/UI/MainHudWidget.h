@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Inventory/InventoryWidget.h"
+#include "Inventory/ItemInfoWidget.h"
 #include "MainHudWidget.generated.h"
 
 UENUM(BlueprintType)

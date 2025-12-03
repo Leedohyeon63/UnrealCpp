@@ -5,8 +5,9 @@
 #include "UI/IventoryDragDropOperation.h"
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
-#include "Components/InventoryComponent.h"
 #include "Inventory/TemporarySlotWidget.h"
+#include "Frame/PickupFactorySubsystem.h"
+#include "Item/PickUpItem.h"
 #include "string.h"
 void UInventorySlotWidget::InitializeSlot(UInventoryComponent* InInventoryComponent, int32 InIndex)
 {
@@ -72,15 +73,41 @@ void UInventorySlotWidget::NativeOnDragDetected(const FGeometry& InGeometry, con
 bool UInventorySlotWidget::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
 {
 	UIventoryDragDropOperation* invenOp = Cast<UIventoryDragDropOperation>(InOperation);
-	if (invenOp)
+	if (invenOp && invenOp->ItemData.IsValid())
 	{
 		UE_LOG(LogTemp, Log, TEXT("Drop : %d Slot에 %s를 옮기기"),
 			Index,
 			*(invenOp->ItemData->ItemName.ToString()));
 
-		TargetInventory->SetItemAtIndex(Index, invenOp->ItemData.Get(), invenOp->Count);
+		if (SlotData->IsEmpty())
+		{
+			TargetInventory->SetItemAtIndex(Index, invenOp->ItemData.Get(), invenOp->Count);
+
+		}
+		else
+		{
+			if (invenOp->ItemData.Get() == SlotData->ItemData)
+			{
+				int32 Count = FMath::Min(SlotData->GetRemianingCount(), invenOp->Count);
+				TargetInventory->UpdateSlotCount(Index, Count);
+
+				int32 RetrunCount = invenOp->Count - Count;
+				if (RetrunCount>0)
+				{
+					invenOp->Index;
+					TargetInventory->SetItemAtIndex(invenOp->Index, invenOp->ItemData.Get(), RetrunCount);
+
+				}
+			}
+			else
+			{
+				TargetInventory->SetItemAtIndex(invenOp->Index, SlotData->ItemData.Get(), SlotData->GetCount());
+				TargetInventory->SetItemAtIndex(invenOp->Index, invenOp->ItemData.Get(), invenOp->Count);
+			}
+		}
 
 		return true;	// 성공적으로 끝났음을 알림
+
 	}
 	return false;		// 실패로 끝났음을 알림 -> NativeOnDragCancelled 실행
 }
@@ -89,15 +116,39 @@ void UInventorySlotWidget::NativeOnDragCancelled(const FDragDropEvent& InDragDro
 {
 	Super::NativeOnDragCancelled(InDragDropEvent, InOperation);
 	UIventoryDragDropOperation* invenOp = Cast<UIventoryDragDropOperation>(InOperation);
-	if (invenOp)
+	if (invenOp && invenOp->ItemData.IsValid())
 	{
 		UE_LOG(LogTemp, Log,
 			TEXT("DragCancelled : 바닥에다가 (%s)아이템을 버려야 한다."),
 			*(invenOp->ItemData->ItemName.ToString()));
 
+		UWorld* World = GetWorld();
+		UPickupFactorySubsystem* PickupFactory = World->GetSubsystem<UPickupFactorySubsystem>();
+		FHitResult HitResult;
+		World->GetFirstPlayerController()->GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, false, HitResult);
 
+		for (size_t i = 0; i < invenOp->Count; i++)
+		{
+			FVector Location = HitResult.Location + FVector::UpVector * 100.0f;
+			FVector2D randCircle = FMath::RandPointInCircle(30.0f);
+			Location.X += randCircle.X;
+			Location.Y += randCircle.Y;
+			PickupFactory->SpawnPickup(invenOp->ItemData->ItemCode, Location);
+		}
 	}
 }
+
+void UInventorySlotWidget::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+{
+
+}
+
+void UInventorySlotWidget::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
+{
+
+}
+
+
 
 void UInventorySlotWidget::ClearSlotWidget() const
 {
