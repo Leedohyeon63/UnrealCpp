@@ -76,13 +76,6 @@ void AEnemyPawn::OnTakeDamage(AActor* DamagedActor, float Damage, const UDamageT
 			UE_LOG(LogTemp, Log, TEXT("Damage : %.1f"), Damage);
 
 			Resource->AddHP(-Damage);
-			//ADamagePopupActor* actor = GetWorld()->SpawnActor<ADamagePopupActor>(
-			//	DamagePopupClass, PopupLocation->GetComponentToWorld());
-			//if (actor)
-			//{
-			//	actor->PopupActivate(Damage);
-			//}
-
 			UDamagePopupSubsystem* popupSystem = GetWorld()->GetSubsystem<UDamagePopupSubsystem>();
 			popupSystem->ShowDamagePopup(Damage, PopupLocation->GetComponentLocation());
 

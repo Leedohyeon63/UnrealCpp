@@ -13,5 +13,12 @@ UCLASS()
 class UNREALCPP_API UShopWidget : public UUserWidget
 {
 	GENERATED_BODY()
-	
+protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Shop|Buy")
+	TWeakObjectPtr<UDataTable> ShopItemList = nullptr;
+
+	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Shop|Buy", meta = (ItemBuyList))
+
+protected:
+	void SetProductList();
 };

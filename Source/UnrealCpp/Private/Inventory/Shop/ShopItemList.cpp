@@ -1,9 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Inventory/Shop/ShopWidget.h"
+#include "Inventory/Shop/ShopItemList.h"
 
-void UShopWidget::SetProductList()
-{
-
-}

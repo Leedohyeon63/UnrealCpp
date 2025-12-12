@@ -51,3 +51,19 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Pickup")
 	TSubclassOf<class APickUp> PickupClass = nullptr;
 };
+
+USTRUCT(BlueprintType)
+struct FShopData_TableRow : public FTableRowBase
+{
+	GENERATED_BODY()
+public:
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Shop")
+	TObjectPtr<class UItemDataAsset> ItemData = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Shop", meta = (ClampMin = "0"))
+	float SelectWeight = 1.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Shop", meta = (ClampMin = "1"))
+	int32 StockCount = 1;
+};
